@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SILOKER</title>
+  <link rel="icon" href="ikon logo.png">
+</head>
+<body>
+
+  <!-- ===== HEADER ===== -->
+  <header>
+  <section id="dashboard"></section>
+    <h1>SILOKER</h1>
+    <h2>Sistem Informasi Penyewaan Loker Kampus</h2>
+    <p>
+      SILOKER adalah sistem informasi berbasis web yang digunakan untuk mengelola
+      penyewaan loker di lingkungan kampus secara efisien, transparan, dan terorganisir.
+      Sistem ini memudahkan pengelola dalam memantau ketersediaan loker, mencatat
+      transaksi penyewaan, serta mengelola data penyewa secara terpusat.
+    </p>
+  </header>
+
+  <hr />
+
+  <!-- ===== NAVIGATION BAR ===== -->
+  <nav>
+    <ul>
+      <li><a href="#dashboard">Dashboard</a></li>
+      <li><a href="#loker">Data Loker</a></li>
+      <li><a href="#transaksi">Transaksi Penyewaan</a></li>
+      <li><a href="#penyewa">Data Penyewa</a></li>
+    </ul>
+  </nav>
+
+  <hr />
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <main>
+
+    <!-- ===== SIDEBAR STATISTIK ===== -->
+    <aside>
+      <h3>Statistik Loker</h3>
+      <ul>
+        <li>
+          <strong>Total Loker:</strong> 120 unit
+        </li>
+        <li>
+          <strong>Loker Tersedia:</strong> 47 unit
+        </li>
+        <li>
+          <strong>Loker Disewa:</strong> 68 unit
+        </li>
+        <li>
+          <strong>Transaksi Hari Ini:</strong> 12 transaksi
+        </li>
+      </ul>
+    </aside>
+
+    <!-- ===== KONTEN UTAMA ===== -->
+    <section>
+
+      <!-- FORM INPUT DATA LOKER -->
+       <section id="loker">
+            <h3>Data Loker</h3>
+            <p>Bagian ini berisi form input dan tabel data loker.</p>
+       </section>
+      <article>
+        <h3>Form Input Data Loker</h3>
+        <p>Isi formulir di bawah ini untuk menambahkan data loker baru ke dalam sistem.</p>
+
+        <form action="#" method="post" enctype="multipart/form-data">
+
+          <fieldset>
+            <legend>Data Loker</legend>
+
+            <p>
+              <label for="kodeLoker">Kode Loker:</label><br />
+              <input
+                type="text"
+                id="kodeLoker"
+                name="kodeLoker"
+                placeholder="Contoh: LKR-A101"
+                required />
+            </p>
+
+            <p>
+              <label for="lokasiLoker">Lokasi Loker / Gedung:</label><br />
+              <input
+                type="text"
+                id="lokasiLoker"
+                name="lokasiLoker"
+                placeholder="Contoh: Gedung A / Lantai 2"
+                required />
+            </p>
+
+            <p>
+              <label for="ukuranLoker">Ukuran Loker:</label><br />
+              <select id="ukuranLoker" name="ukuranLoker" required>
+                <option value="" disabled selected>-- Pilih Ukuran --</option>
+                <option value="kecil">Kecil</option>
+                <option value="sedang">Sedang</option>
+                <option value="besar">Besar</option>
+              </select>
+            </p>
+
+            <p>
+              <label for="jumlahLoker">Jumlah Loker:</label><br />
+              <input
+                type="number"
+                id="jumlahLoker"
+                name="jumlahLoker"
+                placeholder="Contoh: 10"
+                min="1"
+                required />
+            </p>
+
+            <p>
+              <label for="satuan">Satuan:</label><br />
+              <input
+                type="text"
+                id="satuan"
+                name="satuan"
+                placeholder="Contoh: Unit"
+                required />
+            </p>
+
+            <p>
+              <label for="hargaSewa">Harga Sewa per Hari (Rp):</label><br />
+              <input
+                type="number"
+                id="hargaSewa"
+                name="hargaSewa"
+                placeholder="Contoh: 5000"
+                min="0"
+                required />
+            </p>
+
+            <p>
+              <label for="tanggalTersedia">Tanggal Tersedia:</label><br />
+              <input
+                type="date"
+                id="tanggalTersedia"
+                name="tanggalTersedia"
+                required />
+            </p>
+
+            <p>
+              <label for="namaPengelola">Nama Pengelola:</label><br />
+              <input
+                type="text"
+                id="namaPengelola"
+                name="namaPengelola"
+                placeholder="Nama penanggung jawab loker"
+                required />
+            </p>
+
+            <p>
+              <label for="fotoLoker">Foto Loker:</label><br />
+              <input
+                type="file"
+                id="fotoLoker"
+                name="fotoLoker"
+                accept="image/*" />
+            </p>
+
+            <p>
+              <label for="keterangan">Keterangan:</label><br />
+              <textarea
+                id="keterangan"
+                name="keterangan"
+                rows="4"
+                cols="50"
+                placeholder="Tambahkan keterangan atau catatan mengenai loker..."></textarea>
+            </p>
+
+            <p>
+              <input type="submit" value="Simpan Data Loker" />
+              <input type="reset" value="Reset Form" />
+            </p>
+
+          </fieldset>
+
+        </form>
+      </article>
+
+      <hr />
+
+      <!-- TABEL DATA LOKER -->
+      <article>
+        <h3>Daftar Data Loker</h3>
+        <p>Tabel berikut menampilkan data loker yang telah terdaftar di dalam sistem.</p>
+
+        <table border="1" cellpadding="8" cellspacing="0">
+          <caption><strong>Data Loker – SILOKER Kampus</strong></caption>
+          <thead>
+            <tr>
+              <th>No</th>
+              <th>Kode Loker</th>
+              <th>Lokasi</th>
+              <th>Ukuran</th>
+              <th>Harga Sewa (per Hari)</th>
+              <th>Status Loker</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>LKR-A101</td>
+              <td>Gedung A / Lantai 1</td>
+              <td>Sedang</td>
+              <td>Rp 5.000</td>
+              <td>Tersedia</td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>LKR-B204</td>
+              <td>Gedung B / Lantai 2</td>
+              <td>Besar</td>
+              <td>Rp 8.000</td>
+              <td>Disewa</td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td>LKR-C305</td>
+              <td>Gedung C / Lantai 3</td>
+              <td>Kecil</td>
+              <td>Rp 3.000</td>
+              <td>Tersedia</td>
+            </tr>
+            <tr>
+              <td>4</td>
+              <td>LKR-D112</td>
+              <td>Gedung D / Lantai 1</td>
+              <td>Besar</td>
+              <td>Rp 8.000</td>
+              <td>Maintenance</td>
+            </tr>
+            <tr>
+              <td>5</td>
+              <td>LKR-E408</td>
+              <td>Gedung E / Lantai 4</td>
+              <td>Sedang</td>
+              <td>Rp 5.000</td>
+              <td>Disewa</td>
+            </tr>
+            <tr>
+              <td>6</td>
+              <td>LKR-F215</td>
+              <td>Gedung F / Lantai 2</td>
+              <td>Kecil</td>
+              <td>Rp 3.000</td>
+              <td>Tersedia</td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="6">Total data ditampilkan: 6 loker</td>
+            </tr>
+          </tfoot>
+        </table>
+      </article>
+
+    </section>
+
+  </main>
+
+  <hr />
+
+  <!-- ===== FOOTER ===== -->
+  <footer>
+    <p><strong>SILOKER</strong> &ndash; Sistem Informasi Penyewaan Loker Kampus</p>
+    <p>Fakultas Ilmu Komputer</p>
+    <p>Universitas Jember</p>
+  </footer>
+
+</body>
+</html>
