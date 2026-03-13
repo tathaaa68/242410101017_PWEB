@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SILOKER</title>
+  <link rel="icon" href="ikon logo.png">
+
+  <!-- ===== Google Fonts (Tipografi - Bab 1.6) ===== -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* =====================================================
+       RESET & BASE  (Box Model - Bab 1.9)
+       * { box-sizing: border-box } selalu digunakan agar
+       padding & border tidak menambah lebar elemen
+    ===================================================== */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* =====================================================
+       BODY  (Tipografi & Warna - Bab 1.5, 1.6)
+       font-family Inter, background abu muda, warna teks gelap
+    ===================================================== */
+    body {
+      font-family: 'Inter', Arial, sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      color: #212529;
+      background-color: #F5F7FA;
+    }
+
+    /* =====================================================
+       CSS GRID – LAYOUT UTAMA HALAMAN  (Bab 2.3)
+       Menggunakan grid-template-areas untuk layout:
+       header | nav | sidebar+main | footer
+       Mobile-first: default 1 kolom (Bab 3.4)
+    ===================================================== */
+    .page-layout {
+      display: grid;
+      grid-template-areas:
+        'header'
+        'nav'
+        'main'
+        'footer';
+      grid-template-columns: 1fr;
+      grid-template-rows: auto auto 1fr auto;
+      min-height: 100vh;
+    }
+
+    /* =====================================================
+       HEADER  (Bab 1.7 Background Gradient, Bab 1.6 Tipografi)
+       background: linear-gradient dari biru tua ke biru muda
+    ===================================================== */
+    header {
+      grid-area: header;
+      background: linear-gradient(135deg, #1B3A6B 0%, #2980B9 100%);
+      color: white;
+      padding: 32px 24px;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: clamp(28px, 5vw, 48px); /* Unit Responsif - Bab 3.5 */
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;         /* text-transform - Bab 1.6 */
+      margin-bottom: 6px;
+    }
+
+    header h2 {
+      font-size: clamp(13px, 2vw, 17px);
+      font-weight: 500;
+      letter-spacing: 1px;
+      color: rgba(255, 255, 255, 0.85);
+      margin-bottom: 14px;
+    }
+
+    header p {
+      font-size: 14px;
+      line-height: 1.7;
+      color: rgba(255, 255, 255, 0.75);
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    /* =====================================================
+       NAVIGASI – FLEXBOX  (Bab 2.2 Contoh Navbar Horizontal)
+       Flexbox: justify-content space-between, align-items center
+       Position: sticky sehingga tetap di atas saat scroll (Bab 1.10)
+    ===================================================== */
+    nav {
+      grid-area: nav;
+      background-color: #2C3E50;
+      position: sticky;                /* position sticky - Bab 1.10 */
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    nav ul {
+      display: flex;                   /* Flexbox - Bab 2.2 */
+      flex-wrap: wrap;
+      list-style: none;
+      padding: 0 16px;
+      gap: 4px;
+    }
+
+    nav ul li a {
+      display: inline-block;
+      color: white;
+      text-decoration: none;           /* text-decoration - Bab 1.6 */
+      padding: 14px 18px;
+      font-size: 14px;
+      font-weight: 500;
+      border-radius: 0;
+      /* Transisi smooth saat hover - Bab 4.1 */
+      transition: background-color 0.3s ease, color 0.3s ease;
+      position: relative;
+    }
+
+    /* Pseudo-element animasi underline tumbuh saat hover - Bab 4.1 */
+    nav ul li a::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0;
+      width: 0; height: 3px;
+      background: #2980B9;
+      transition: width 0.3s ease;
+    }
+
+    nav ul li a:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+      color: #AED6F1;
+    }
+
+    nav ul li a:hover::after {
+      width: 100%; /* Garis bawah tumbuh - Bab 4.1 */
+    }
+
+    /* =====================================================
+       AREA KONTEN UTAMA + SIDEBAR
+       Flexbox sidebar layout (Bab 2.2 Contoh 4: Sidebar Layout)
+       Mobile: kolom vertikal. Desktop: berdampingan (Bab 3.4)
+    ===================================================== */
+    .content-wrapper {
+      grid-area: main;
+      display: flex;                   /* Flexbox - Bab 2.2 */
+      flex-direction: column;          /* Mobile: vertikal */
+      gap: 0;
+      align-items: stretch;
+    }
+
+    /* =====================================================
+       SIDEBAR – STATISTIK  (Box Model - Bab 1.9)
+       Border, padding, margin diatur dengan jelas
+    ===================================================== */
+    aside {
+      background-color: #FFFFFF;
+      padding: 24px;                   /* Padding - Bab 1.9 */
+      border-right: 3px solid #2980B9; /* Border - Bab 1.8 */
+      flex-shrink: 0;
+    }
+
+    aside h3 {
+      font-size: 15px;
+      font-weight: 700;
+      color: #1B3A6B;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #EBF5FB;
+    }
+
+    /* CSS Grid untuk stat-card di sidebar - Bab 2.3 */
+    .stat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr; /* 2 kolom di mobile */
+      gap: 12px;
+    }
+
+    aside ul {
+      list-style: none;
+    }
+
+    /* Stat card dengan box-shadow & border-radius - Bab 1.8 */
+    .stat-card {
+      background: linear-gradient(135deg, #EBF5FB, #D6EAF8);
+      border-radius: 10px;             /* border-radius - Bab 1.8 */
+      padding: 14px;
+      border-left: 4px solid #2980B9;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06); /* box-shadow - Bab 1.8 */
+      /* Animasi transisi hover - Bab 4.1 */
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-3px);     /* naik 3px saat hover */
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+    }
+
+    .stat-card strong {
+      display: block;
+      font-size: 11px;
+      color: #5D6D7E;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+    }
+
+    .stat-card span {
+      font-size: 22px;
+      font-weight: 700;
+      color: #1B3A6B;
+    }
+
+    /* =====================================================
+       MAIN CONTENT
+    ===================================================== */
+    main {
+      flex: 1;
+      padding: 24px 20px;
+      background-color: #F5F7FA;
+    }
+
+    /* =====================================================
+       SECTION HEADING
+    ===================================================== */
+    section h3 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #1B3A6B;
+      margin-bottom: 6px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #AED6F1;
+    }
+
+    section > p {
+      color: #5D6D7E;
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+
+    /* =====================================================
+       ARTICLE CARD  (Border, Shadow - Bab 1.8)
+       Card dengan border-radius, box-shadow, dan transisi hover
+    ===================================================== */
+    article {
+      background: #FFFFFF;
+      border-radius: 12px;             /* sudut membulat - Bab 1.8 */
+      padding: 28px;
+      margin-bottom: 24px;
+      border: 1px solid #E8EDF2;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+      /* Transisi hover card - Bab 4.1 */
+      transition: box-shadow 0.3s ease, transform 0.3s ease;
+    }
+
+    article:hover {
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+      transform: translateY(-2px);
+    }
+
+    article h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #1B3A6B;
+      margin-bottom: 6px;
+      border: none;
+      padding: 0;
+    }
+
+    article > p {
+      color: #5D6D7E;
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+
+    /* =====================================================
+       FORM STYLING  (Selektor Atribut & Pseudo-class - Bab 1.4)
+       Menggunakan input[type='text'], input:focus, dll.
+    ===================================================== */
+    fieldset {
+      border: 1.5px solid #D5D8DC;
+      border-radius: 8px;
+      padding: 20px 24px;
+    }
+
+    legend {
+      font-weight: 700;
+      font-size: 14px;
+      color: #1B3A6B;
+      padding: 0 10px;
+      background: white;
+      border-radius: 4px;
+    }
+
+    /* Flexbox untuk form layout - Bab 2.2 */
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+
+    form p {
+      margin: 0;
+    }
+
+    form label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: #34495E;
+      margin-bottom: 5px;
+    }
+
+    /* Selektor atribut - input berbagai tipe - Bab 1.4 */
+    input[type='text'],
+    input[type='number'],
+    input[type='date'],
+    input[type='file'],
+    select,
+    textarea {
+      width: 100%;
+      padding: 10px 14px;
+      border: 2px solid #D5D8DC;       /* Border - Bab 1.8 */
+      border-radius: 6px;
+      font-size: 14px;
+      font-family: 'Inter', Arial, sans-serif;
+      color: #212529;
+      background-color: #FDFEFE;
+      /* Transisi focus - Bab 4.1 */
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      outline: none;
+    }
+
+    /* Pseudo-class :focus untuk efek interaktif - Bab 1.4 & 4.1 */
+    input[type='text']:focus,
+    input[type='number']:focus,
+    input[type='date']:focus,
+    select:focus,
+    textarea:focus {
+      border-color: #2980B9;
+      box-shadow: 0 0 0 3px rgba(41, 128, 185, 0.15);
+      background-color: #FAFEFF;
+    }
+
+    textarea {
+      resize: vertical;
+    }
+
+    /* Flexbox untuk tombol submit & reset - Bab 2.2 */
+    .form-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+
+    /* Styling tombol submit - Bab 1.7, 1.8, 4.1 */
+    input[type='submit'] {
+      background: linear-gradient(135deg, #1B3A6B, #2980B9);
+      color: white;
+      border: none;
+      padding: 11px 28px;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: 'Inter', Arial, sans-serif;
+      /* Transisi hover tombol - Bab 4.1 */
+      transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+      box-shadow: 0 2px 6px rgba(41, 128, 185, 0.35);
+    }
+
+    input[type='submit']:hover {
+      background: linear-gradient(135deg, #154E86, #1E6FA5);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(41, 128, 185, 0.45);
+    }
+
+    /* Styling tombol reset */
+    input[type='reset'] {
+      background-color: #ECF0F1;
+      color: #5D6D7E;
+      border: 2px solid #D5D8DC;
+      padding: 10px 24px;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: 'Inter', Arial, sans-serif;
+      transition: background-color 0.3s ease, border-color 0.3s ease;
+    }
+
+    input[type='reset']:hover {
+      background-color: #D5D8DC;
+      border-color: #BFC9CA;
+    }
+
+    /* =====================================================
+       TABEL LOKER  (Selektor nth-child zebra - Bab 1.4)
+       overflow-x: auto untuk tabel responsif (Bab 3.5)
+    ===================================================== */
+    .table-container {
+      overflow-x: auto;                /* Tabel responsif - Bab 3.5 */
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 580px;
+      font-size: 14px;
+    }
+
+    caption {
+      caption-side: top;
+      font-size: 14px;
+      font-weight: 700;
+      color: #1B3A6B;
+      padding: 10px 0;
+      text-align: left;
+    }
+
+    thead th {
+      background: linear-gradient(135deg, #1B3A6B, #2C3E50);
+      color: white;
+      padding: 12px 16px;
+      text-align: left;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    thead th:first-child { border-radius: 8px 0 0 0; }
+    thead th:last-child  { border-radius: 0 8px 0 0; }
+
+    tbody td {
+      padding: 11px 16px;
+      border-bottom: 1px solid #EBF5FB;
+      color: #212529;
+    }
+
+    /* Zebra striping - selektor nth-child - Bab 1.4 */
+    tbody tr:nth-child(even) {
+      background-color: #F2F9FF;
+    }
+
+    /* Pseudo-class :hover pada baris tabel - Bab 1.4 */
+    tbody tr:hover {
+      background-color: #D6EAF8;
+      transition: background-color 0.2s ease; /* Transisi - Bab 4.1 */
+    }
+
+    tfoot td {
+      padding: 10px 16px;
+      background-color: #EBF5FB;
+      font-size: 13px;
+      font-style: italic;
+      color: #5D6D7E;
+      border-radius: 0 0 8px 8px;
+    }
+
+    /* Badge status loker - Bab 1.5 Warna */
+    .status-tersedia {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 50px;             /* pill shape - Bab 1.8 */
+      background-color: #D4EDDA;
+      color: #155724;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .status-disewa {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 50px;
+      background-color: #FFF3CD;
+      color: #856404;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .status-maintenance {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 50px;
+      background-color: #F8D7DA;
+      color: #721c24;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    hr {
+      border: none;
+      border-top: 1px solid #E8EDF2;
+      margin: 0;
+    }
+
+    /* =====================================================
+       FOOTER  (Bab 1.5, 1.6)
+       Background gelap, teks putih, text-align center
+    ===================================================== */
+    footer {
+      grid-area: footer;
+      background: linear-gradient(135deg, #1B3A6B, #17202A);
+      color: rgba(255, 255, 255, 0.85);
+      text-align: center;
+      padding: 28px 20px;
+      font-size: 13px;
+      line-height: 2;
+    }
+
+    footer strong {
+      color: #AED6F1;
+      font-size: 15px;
+    }
+
+    /* =====================================================
+       CSS ANIMASI – @keyframes  (Bab 4.2)
+       Animasi fadeInDown untuk header saat halaman dibuka
+    ===================================================== */
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Terapkan animasi - Bab 4.2 */
+    header {
+      animation: fadeInDown 0.6s ease both;
+    }
+
+    article {
+      animation: fadeInUp 0.5s ease both;
+    }
+
+    /* Delay animasi berurutan pada article */
+    article:nth-child(1) { animation-delay: 0.1s; }
+    article:nth-child(2) { animation-delay: 0.2s; }
+
+    /* =====================================================
+       MEDIA QUERY – RESPONSIF  (Bab 3.3, 3.4)
+       Mobile-First: default = mobile, lalu tambah breakpoint
+    ===================================================== */
+
+    /* ── Tablet: min-width 768px ─────────────────────── */
+    @media (min-width: 768px) {
+      .stat-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      nav ul {
+        padding: 0 24px;
+      }
+
+      main {
+        padding: 28px 28px;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    /* ── Laptop: min-width 1024px ─────────────────────── */
+    @media (min-width: 1024px) {
+      /* Aktifkan layout sidebar + main berdampingan */
+      .content-wrapper {
+        flex-direction: row;
+        align-items: flex-start;
+      }
+
+      aside {
+        width: 280px;
+        flex-shrink: 0;
+        position: sticky;
+        top: 52px;                     /* menempel di bawah nav */
+        max-height: calc(100vh - 52px);
+        overflow-y: auto;
+      }
+
+      .stat-grid {
+        grid-template-columns: 1fr;   /* 1 kolom di sidebar */
+      }
+
+      main {
+        flex: 1;
+        padding: 28px 32px;
+      }
+    }
+
+    /* ── Desktop: min-width 1280px ─────────────────────── */
+    @media (min-width: 1280px) {
+      main {
+        padding: 32px 40px;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr 1fr 1fr;
+      }
+    }
+
+    /* ── Print ─────────────────────────────────────────── */
+    @media print {
+      nav, .form-actions, input[type='submit'], input[type='reset'] {
+        display: none;
+      }
+      body { font-size: 12pt; background: white; }
+      article { box-shadow: none; border: 1px solid #ccc; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="page-layout">
+
+    <!-- ===== HEADER ===== -->
+    <header>
+      <section id="dashboard"></section>
+      <h1>SILOKER</h1>
+      <h2>Sistem Informasi Penyewaan Loker Kampus</h2>
+      <p>
+        SILOKER adalah sistem informasi berbasis web yang digunakan untuk mengelola
+        penyewaan loker di lingkungan kampus secara efisien, transparan, dan terorganisir.
+        Sistem ini memudahkan pengelola dalam memantau ketersediaan loker, mencatat
+        transaksi penyewaan, serta mengelola data penyewa secara terpusat.
+      </p>
+    </header>
+
+    <!-- ===== NAVIGATION BAR ===== -->
+    <nav>
+      <ul>
+        <li><a href="#dashboard">Dashboard</a></li>
+        <li><a href="#loker">Data Loker</a></li>
+        <li><a href="#transaksi">Transaksi Penyewaan</a></li>
+        <li><a href="#penyewa">Data Penyewa</a></li>
+      </ul>
+    </nav>
+
+    <!-- ===== WRAPPER: SIDEBAR + MAIN ===== -->
+    <div class="content-wrapper">
+
+      <!-- ===== SIDEBAR STATISTIK ===== -->
+      <aside>
+        <h3>Statistik Loker</h3>
+        <ul class="stat-grid">
+          <li class="stat-card">
+            <strong>Total Loker</strong>
+            <span>120</span>
+          </li>
+          <li class="stat-card">
+            <strong>Tersedia</strong>
+            <span>47</span>
+          </li>
+          <li class="stat-card">
+            <strong>Disewa</strong>
+            <span>68</span>
+          </li>
+          <li class="stat-card">
+            <strong>Transaksi Hari Ini</strong>
+            <span>12</span>
+          </li>
+        </ul>
+      </aside>
+
+      <!-- ===== MAIN CONTENT ===== -->
+      <main>
+
+        <!-- SECTION DATA LOKER -->
+        <section id="loker">
+          <h3>Data Loker</h3>
+          <p>Bagian ini berisi form input dan tabel data loker.</p>
+        </section>
+
+        <!-- FORM INPUT DATA LOKER -->
+        <article>
+          <h3>Form Input Data Loker</h3>
+          <p>Isi formulir di bawah ini untuk menambahkan data loker baru ke dalam sistem.</p>
+
+          <form action="#" method="post" enctype="multipart/form-data">
+            <fieldset>
+              <legend>Data Loker</legend>
+              <div class="form-grid">
+
+                <p>
+                  <label for="kodeLoker">Kode Loker:</label>
+                  <input type="text" id="kodeLoker" name="kodeLoker"
+                    placeholder="Contoh: LKR-A101" required />
+                </p>
+
+                <p>
+                  <label for="lokasiLoker">Lokasi Loker / Gedung:</label>
+                  <input type="text" id="lokasiLoker" name="lokasiLoker"
+                    placeholder="Contoh: Gedung A / Lantai 2" required />
+                </p>
+
+                <p>
+                  <label for="ukuranLoker">Ukuran Loker:</label>
+                  <select id="ukuranLoker" name="ukuranLoker" required>
+                    <option value="" disabled selected>-- Pilih Ukuran --</option>
+                    <option value="kecil">Kecil</option>
+                    <option value="sedang">Sedang</option>
+                    <option value="besar">Besar</option>
+                  </select>
+                </p>
+
+                <p>
+                  <label for="jumlahLoker">Jumlah Loker:</label>
+                  <input type="number" id="jumlahLoker" name="jumlahLoker"
+                    placeholder="Contoh: 10" min="1" required />
+                </p>
+
+                <p>
+                  <label for="satuan">Satuan:</label>
+                  <input type="text" id="satuan" name="satuan"
+                    placeholder="Contoh: Unit" required />
+                </p>
+
+                <p>
+                  <label for="hargaSewa">Harga Sewa per Hari (Rp):</label>
+                  <input type="number" id="hargaSewa" name="hargaSewa"
+                    placeholder="Contoh: 5000" min="0" required />
+                </p>
+
+                <p>
+                  <label for="tanggalTersedia">Tanggal Tersedia:</label>
+                  <input type="date" id="tanggalTersedia" name="tanggalTersedia" required />
+                </p>
+
+                <p>
+                  <label for="namaPengelola">Nama Pengelola:</label>
+                  <input type="text" id="namaPengelola" name="namaPengelola"
+                    placeholder="Nama penanggung jawab loker" required />
+                </p>
+
+                <p>
+                  <label for="fotoLoker">Foto Loker:</label>
+                  <input type="file" id="fotoLoker" name="fotoLoker" accept="image/*" />
+                </p>
+
+                <p style="grid-column: 1 / -1;">
+                  <label for="keterangan">Keterangan:</label>
+                  <textarea id="keterangan" name="keterangan" rows="3"
+                    placeholder="Tambahkan keterangan atau catatan mengenai loker..."></textarea>
+                </p>
+
+              </div><!-- /.form-grid -->
+
+              <div class="form-actions">
+                <input type="submit" value="Simpan Data Loker" />
+                <input type="reset" value="Reset Form" />
+              </div>
+
+            </fieldset>
+          </form>
+        </article>
+
+        <hr />
+
+        <!-- TABEL DATA LOKER -->
+        <article>
+          <h3>Daftar Data Loker</h3>
+          <p>Tabel berikut menampilkan data loker yang telah terdaftar di dalam sistem.</p>
+
+          <div class="table-container">
+            <table>
+              <caption><strong>Data Loker – SILOKER Kampus</strong></caption>
+              <thead>
+                <tr>
+                  <th>No</th>
+                  <th>Kode Loker</th>
+                  <th>Lokasi</th>
+                  <th>Ukuran</th>
+                  <th>Harga Sewa (per Hari)</th>
+                  <th>Status Loker</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>1</td>
+                  <td>LKR-A101</td>
+                  <td>Gedung A / Lantai 1</td>
+                  <td>Sedang</td>
+                  <td>Rp 5.000</td>
+                  <td><span class="status-tersedia">Tersedia</span></td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td>LKR-B204</td>
+                  <td>Gedung B / Lantai 2</td>
+                  <td>Besar</td>
+                  <td>Rp 8.000</td>
+                  <td><span class="status-disewa">Disewa</span></td>
+                </tr>
+                <tr>
+                  <td>3</td>
+                  <td>LKR-C305</td>
+                  <td>Gedung C / Lantai 3</td>
+                  <td>Kecil</td>
+                  <td>Rp 3.000</td>
+                  <td><span class="status-tersedia">Tersedia</span></td>
+                </tr>
+                <tr>
+                  <td>4</td>
+                  <td>LKR-D112</td>
+                  <td>Gedung D / Lantai 1</td>
+                  <td>Besar</td>
+                  <td>Rp 8.000</td>
+                  <td><span class="status-maintenance">Maintenance</span></td>
+                </tr>
+                <tr>
+                  <td>5</td>
+                  <td>LKR-E408</td>
+                  <td>Gedung E / Lantai 4</td>
+                  <td>Sedang</td>
+                  <td>Rp 5.000</td>
+                  <td><span class="status-disewa">Disewa</span></td>
+                </tr>
+                <tr>
+                  <td>6</td>
+                  <td>LKR-F215</td>
+                  <td>Gedung F / Lantai 2</td>
+                  <td>Kecil</td>
+                  <td>Rp 3.000</td>
+                  <td><span class="status-tersedia">Tersedia</span></td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="6">Total data ditampilkan: 6 loker</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div><!-- /.table-container -->
+        </article>
+
+      </main>
+    </div><!-- /.content-wrapper -->
+
+    <!-- ===== FOOTER ===== -->
+    <footer>
+      <p><strong>SILOKER</strong> &ndash; Sistem Informasi Penyewaan Loker Kampus</p>
+      <p>Fakultas Ilmu Komputer</p>
+      <p>Universitas Jember</p>
+      <p>Dibuat oleh: <strong>Talitha Puspitasari</strong></p>
+    </footer>
+
+  </div><!-- /.page-layout -->
+
+</body>
+</html>

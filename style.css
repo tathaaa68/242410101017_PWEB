@@ -1,0 +1,623 @@
+/* =====================================================
+   IMPORT GOOGLE FONTS  (Tipografi - Bab 1.6)
+   Import font Inter dari Google Fonts
+===================================================== */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+/* =====================================================
+   RESET & BASE  (Box Model - Bab 1.9)
+   * { box-sizing: border-box } selalu digunakan agar
+   padding & border tidak menambah lebar elemen
+===================================================== */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* =====================================================
+   BODY  (Tipografi & Warna - Bab 1.5, 1.6)
+   font-family Inter, background abu muda, warna teks gelap
+===================================================== */
+body {
+  font-family: 'Inter', Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  color: #212529;
+  background-color: #F5F7FA;
+}
+
+/* =====================================================
+   CSS GRID – LAYOUT UTAMA HALAMAN  (Bab 2.3)
+   Menggunakan grid-template-areas untuk layout:
+   header | nav | sidebar+main | footer
+   Mobile-first: default 1 kolom (Bab 3.4)
+===================================================== */
+.page-layout {
+  display: grid;
+  grid-template-areas:
+    'header'
+    'nav'
+    'main'
+    'footer';
+  grid-template-columns: 1fr;
+  grid-template-rows: auto auto 1fr auto;
+  min-height: 100vh;
+}
+
+/* =====================================================
+   HEADER  (Bab 1.7 Background Gradient, Bab 1.6 Tipografi)
+   background: linear-gradient dari biru tua ke biru muda
+===================================================== */
+header {
+  grid-area: header;
+  background: linear-gradient(135deg, #1B3A6B 0%, #2980B9 100%);
+  color: white;
+  padding: 32px 24px;
+  text-align: center;
+  animation: fadeInDown 0.6s ease both; /* Animasi - Bab 4.2 */
+}
+
+header h1 {
+  font-size: clamp(28px, 5vw, 48px); /* Unit Responsif - Bab 3.5 */
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;          /* text-transform - Bab 1.6 */
+  margin-bottom: 6px;
+}
+
+header h2 {
+  font-size: clamp(13px, 2vw, 17px);
+  font-weight: 500;
+  letter-spacing: 1px;
+  color: rgba(255, 255, 255, 0.85);
+  margin-bottom: 14px;
+}
+
+header p {
+  font-size: 14px;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.75);
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+/* =====================================================
+   NAVIGASI – FLEXBOX  (Bab 2.2 Contoh Navbar Horizontal)
+   Flexbox: justify-content, align-items center
+   Position: sticky (Bab 1.10)
+===================================================== */
+nav {
+  grid-area: nav;
+  background-color: #2C3E50;
+  position: sticky;                   /* position sticky - Bab 1.10 */
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+nav ul {
+  display: flex;                      /* Flexbox - Bab 2.2 */
+  flex-wrap: wrap;
+  list-style: none;
+  padding: 0 16px;
+  gap: 4px;
+}
+
+nav ul li a {
+  display: inline-block;
+  color: white;
+  text-decoration: none;              /* text-decoration - Bab 1.6 */
+  padding: 14px 18px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.3s ease, color 0.3s ease; /* Transisi - Bab 4.1 */
+  position: relative;
+}
+
+/* Pseudo-element animasi underline tumbuh saat hover - Bab 4.1 */
+nav ul li a::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 3px;
+  background: #2980B9;
+  transition: width 0.3s ease;
+}
+
+nav ul li a:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #AED6F1;
+}
+
+nav ul li a:hover::after {
+  width: 100%; /* Garis bawah tumbuh - Bab 4.1 */
+}
+
+/* =====================================================
+   AREA KONTEN UTAMA + SIDEBAR
+   Flexbox sidebar layout (Bab 2.2 Contoh 4: Sidebar Layout)
+   Mobile: kolom vertikal. Desktop: berdampingan (Bab 3.4)
+===================================================== */
+.content-wrapper {
+  grid-area: main;
+  display: flex;                      /* Flexbox - Bab 2.2 */
+  flex-direction: column;             /* Mobile: vertikal */
+  gap: 0;
+  align-items: stretch;
+}
+
+/* =====================================================
+   SIDEBAR – STATISTIK  (Box Model - Bab 1.9)
+   Border, padding, margin diatur dengan jelas
+===================================================== */
+aside {
+  background-color: #FFFFFF;
+  padding: 24px;                      /* Padding - Bab 1.9 */
+  border-right: 3px solid #2980B9;    /* Border - Bab 1.8 */
+  flex-shrink: 0;
+}
+
+aside h3 {
+  font-size: 15px;
+  font-weight: 700;
+  color: #1B3A6B;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 16px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #EBF5FB;
+}
+
+/* CSS Grid untuk stat-card di sidebar - Bab 2.3 */
+.stat-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  list-style: none;
+}
+
+/* Stat card dengan box-shadow & border-radius - Bab 1.8 */
+.stat-card {
+  background: linear-gradient(135deg, #EBF5FB, #D6EAF8);
+  border-radius: 10px;                /* border-radius - Bab 1.8 */
+  padding: 14px;
+  border-left: 4px solid #2980B9;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06); /* box-shadow - Bab 1.8 */
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Transisi - Bab 4.1 */
+}
+
+.stat-card:hover {
+  transform: translateY(-3px);        /* naik 3px saat hover */
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+}
+
+.stat-card strong {
+  display: block;
+  font-size: 11px;
+  color: #5D6D7E;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+.stat-card span {
+  font-size: 22px;
+  font-weight: 700;
+  color: #1B3A6B;
+}
+
+/* =====================================================
+   MAIN CONTENT
+===================================================== */
+main {
+  flex: 1;
+  padding: 24px 20px;
+  background-color: #F5F7FA;
+}
+
+/* =====================================================
+   SECTION HEADING
+===================================================== */
+section h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1B3A6B;
+  margin-bottom: 6px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #AED6F1;
+}
+
+section > p {
+  color: #5D6D7E;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+/* =====================================================
+   ARTICLE CARD  (Border, Shadow - Bab 1.8)
+   Card dengan border-radius, box-shadow, dan transisi hover
+===================================================== */
+article {
+  background: #FFFFFF;
+  border-radius: 12px;                /* sudut membulat - Bab 1.8 */
+  padding: 28px;
+  margin-bottom: 24px;
+  border: 1px solid #E8EDF2;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  transition: box-shadow 0.3s ease, transform 0.3s ease; /* Transisi - Bab 4.1 */
+  animation: fadeInUp 0.5s ease both; /* Animasi - Bab 4.2 */
+}
+
+article:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+/* Delay animasi berurutan pada article */
+article:nth-child(1) { animation-delay: 0.1s; }
+article:nth-child(2) { animation-delay: 0.2s; }
+
+article h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #1B3A6B;
+  margin-bottom: 6px;
+}
+
+article > p {
+  color: #5D6D7E;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+/* =====================================================
+   FORM STYLING  (Selektor Atribut & Pseudo-class - Bab 1.4)
+   Menggunakan input[type='text'], input:focus, dll.
+===================================================== */
+fieldset {
+  border: 1.5px solid #D5D8DC;
+  border-radius: 8px;
+  padding: 20px 24px;
+}
+
+legend {
+  font-weight: 700;
+  font-size: 14px;
+  color: #1B3A6B;
+  padding: 0 10px;
+  background: white;
+  border-radius: 4px;
+}
+
+/* Grid untuk form layout - Bab 2.3 */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+form p {
+  margin: 0;
+}
+
+form label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #34495E;
+  margin-bottom: 5px;
+}
+
+/* Selektor atribut input berbagai tipe - Bab 1.4 */
+input[type='text'],
+input[type='number'],
+input[type='date'],
+input[type='file'],
+select,
+textarea {
+  width: 100%;
+  padding: 10px 14px;
+  border: 2px solid #D5D8DC;          /* Border - Bab 1.8 */
+  border-radius: 6px;
+  font-size: 14px;
+  font-family: 'Inter', Arial, sans-serif;
+  color: #212529;
+  background-color: #FDFEFE;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Transisi - Bab 4.1 */
+  outline: none;
+}
+
+/* Pseudo-class :focus - Bab 1.4 & 4.1 */
+input[type='text']:focus,
+input[type='number']:focus,
+input[type='date']:focus,
+select:focus,
+textarea:focus {
+  border-color: #2980B9;
+  box-shadow: 0 0 0 3px rgba(41, 128, 185, 0.15);
+  background-color: #FAFEFF;
+}
+
+textarea {
+  resize: vertical;
+}
+
+/* Flexbox untuk tombol submit & reset - Bab 2.2 */
+.form-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+/* Styling tombol submit - Bab 1.7, 1.8, 4.1 */
+input[type='submit'] {
+  background: linear-gradient(135deg, #1B3A6B, #2980B9);
+  color: white;
+  border: none;
+  padding: 11px 28px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'Inter', Arial, sans-serif;
+  transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+  box-shadow: 0 2px 6px rgba(41, 128, 185, 0.35);
+}
+
+input[type='submit']:hover {
+  background: linear-gradient(135deg, #154E86, #1E6FA5);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(41, 128, 185, 0.45);
+}
+
+/* Styling tombol reset */
+input[type='reset'] {
+  background-color: #ECF0F1;
+  color: #5D6D7E;
+  border: 2px solid #D5D8DC;
+  padding: 10px 24px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'Inter', Arial, sans-serif;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+input[type='reset']:hover {
+  background-color: #D5D8DC;
+  border-color: #BFC9CA;
+}
+
+/* =====================================================
+   TABEL LOKER  (Selektor nth-child zebra - Bab 1.4)
+   overflow-x: auto untuk tabel responsif (Bab 3.5)
+===================================================== */
+.table-container {
+  overflow-x: auto;                   /* Tabel responsif - Bab 3.5 */
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 580px;
+  font-size: 14px;
+}
+
+caption {
+  caption-side: top;
+  font-size: 14px;
+  font-weight: 700;
+  color: #1B3A6B;
+  padding: 10px 0;
+  text-align: left;
+}
+
+thead th {
+  background: linear-gradient(135deg, #1B3A6B, #2C3E50);
+  color: white;
+  padding: 12px 16px;
+  text-align: left;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+thead th:first-child { border-radius: 8px 0 0 0; }
+thead th:last-child  { border-radius: 0 8px 0 0; }
+
+tbody td {
+  padding: 11px 16px;
+  border-bottom: 1px solid #EBF5FB;
+  color: #212529;
+}
+
+/* Zebra striping – selektor nth-child - Bab 1.4 */
+tbody tr:nth-child(even) {
+  background-color: #F2F9FF;
+}
+
+/* Pseudo-class :hover pada baris tabel - Bab 1.4 */
+tbody tr:hover {
+  background-color: #D6EAF8;
+  transition: background-color 0.2s ease; /* Transisi - Bab 4.1 */
+}
+
+tfoot td {
+  padding: 10px 16px;
+  background-color: #EBF5FB;
+  font-size: 13px;
+  font-style: italic;
+  color: #5D6D7E;
+  border-radius: 0 0 8px 8px;
+}
+
+/* Badge status loker - Bab 1.5 Warna */
+.status-tersedia {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 50px;                /* pill shape - Bab 1.8 */
+  background-color: #D4EDDA;
+  color: #155724;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.status-disewa {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 50px;
+  background-color: #FFF3CD;
+  color: #856404;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.status-maintenance {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 50px;
+  background-color: #F8D7DA;
+  color: #721c24;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid #E8EDF2;
+  margin: 0 0 24px 0;
+}
+
+/* =====================================================
+   FOOTER  (Bab 1.5, 1.6)
+   Background gelap, teks putih, text-align center
+===================================================== */
+footer {
+  grid-area: footer;
+  background: linear-gradient(135deg, #1B3A6B, #17202A);
+  color: rgba(255, 255, 255, 0.85);
+  text-align: center;
+  padding: 28px 20px;
+  font-size: 13px;
+  line-height: 2;
+}
+
+footer strong {
+  color: #AED6F1;
+  font-size: 15px;
+}
+
+/* =====================================================
+   CSS ANIMASI – @keyframes  (Bab 4.2)
+   Animasi fadeInDown untuk header saat halaman dibuka
+   Animasi fadeInUp untuk article
+===================================================== */
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =====================================================
+   MEDIA QUERY – RESPONSIF  (Bab 3.3, 3.4)
+   Mobile-First: default = mobile, lalu tambah breakpoint
+===================================================== */
+
+/* ── Tablet: min-width 768px ─────────────────────── */
+@media (min-width: 768px) {
+  .stat-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  nav ul {
+    padding: 0 24px;
+  }
+
+  main {
+    padding: 28px;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* ── Laptop: min-width 1024px ───────────────────── */
+@media (min-width: 1024px) {
+  .content-wrapper {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+
+  aside {
+    width: 280px;
+    flex-shrink: 0;
+    position: sticky;
+    top: 52px;
+    max-height: calc(100vh - 52px);
+    overflow-y: auto;
+  }
+
+  .stat-grid {
+    grid-template-columns: 1fr;       /* 1 kolom di sidebar desktop */
+  }
+
+  main {
+    flex: 1;
+    padding: 28px 32px;
+  }
+}
+
+/* ── Desktop: min-width 1280px ──────────────────── */
+@media (min-width: 1280px) {
+  main {
+    padding: 32px 40px;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}
+
+/* ── Print ──────────────────────────────────────── */
+@media print {
+  nav,
+  .form-actions,
+  input[type='submit'],
+  input[type='reset'] {
+    display: none;
+  }
+
+  body {
+    font-size: 12pt;
+    background: white;
+  }
+
+  article {
+    box-shadow: none;
+    border: 1px solid #ccc;
+  }
+}
