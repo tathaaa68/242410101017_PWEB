@@ -64,6 +64,7 @@ a  { color: inherit; text-decoration: none; }
 /* =====================================================
    (1) NAVBAR FIXED RESPONSIF – FLEXBOX  (Bab 2.2, 1.10)
 ===================================================== */
+
 .navbar {
   position: fixed;
   top: 0; left: 0;
@@ -83,7 +84,14 @@ a  { color: inherit; text-decoration: none; }
   display: flex;
   align-items: center;
   gap: 10px;
-  flex-shrink: 0;
+  font-weight: 700;
+  font-size: 16px;
+  color: white;
+}
+.logo {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
 }
 
 .navbar-logo-icon {
