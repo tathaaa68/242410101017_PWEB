@@ -86,14 +86,26 @@ a  { color: inherit; text-decoration: none; }
   flex-shrink: 0;
 }
 
-.navbar-logo-icon {
-  width: 36px; height: 36px;
-  background: linear-gradient(135deg, var(--teal), var(--blue-light));
-  border-radius: 8px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 18px;
+.navbar-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
+.logo-img {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+}
+
+.logo-text {
+  font-family: 'Syne', sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--white);
+  letter-spacing: 3px;
+  margin-bottom: 10px;
+}
 .navbar-brand span {
   font-family: 'Syne', sans-serif;
   font-size: 20px;
@@ -1048,3 +1060,222 @@ hr {
   body { font-size: 12pt; background: white; padding-top: 0; }
   .hero { animation: none; }
 }
+
+/*
+      ============================================================
+      CSS TAMBAHAN UNTUK FITUR JAVASCRIPTNYAA
+      ============================================================
+      Semua style di bawah ini sengaja dipisah dari style.css
+      supaya mudah dicari, tinggal lihat bagian mana yang
+      berhubungan dengan fitur JS yang sedang dikerjakan.
+      Idealnya nanti dipindah ke style.css juga dan diberi komentar
+      section yang sama.
+      ============================================================
+    */
+
+    /*
+      Kelas validasi input form.
+      .input-error dan .input-valid ditambahkan oleh JavaScript
+      setelah user mengisi field dan melepas fokus (event blur/submit).
+      Kita pakai !important di sini karena class ini perlu
+      "menang" dari style default input yang sudah ada di style.css.
+    */
+    .input-error  { border-color: #EF4444 !important; box-shadow: 0 0 0 3px rgba(239,68,68,.12) !important; }
+    .input-valid  { border-color: var(--teal) !important; }
+
+    /*
+      Tempat menampilkan pesan error di bawah input.
+      min-height: 16px supaya layout tidak loncat saat pesan
+      muncul atau hilang — tinggi area error selalu "dipesan"
+      meski belum ada teksnya.
+    */
+    .error-msg    { font-size: 11.5px; color: #EF4444; margin-top: 3px; display: block; min-height: 16px; }
+
+
+    /* ── Notifikasi Toast ── */
+    /*
+      Toast adalah notifikasi kecil yang muncul sebentar di pojok layar,
+      seperti notifikasi WhatsApp. Kita taruh di pojok kanan bawah
+      (position: fixed) supaya tidak terganggu oleh scroll halaman.
+
+      Awalnya toast disembunyikan dengan cara geser ke bawah (translateY)
+      dan opacity 0, bukan display:none. Kenapa? Karena display:none
+      tidak bisa dianimasikan. Dengan translateY + opacity, kita bisa
+      buat efek "slide up" yang halus saat toast muncul.
+    */
+    .notif-box {
+      position: fixed; bottom: 24px; right: 24px; z-index: 9999;
+      padding: 14px 20px; border-radius: 10px; font-size: 14px; font-weight: 600;
+      max-width: 340px; box-shadow: 0 8px 32px rgba(0,0,0,.18);
+      transform: translateY(80px); opacity: 0;
+      transition: transform .35s cubic-bezier(.4,0,.2,1), opacity .35s;
+      /* pointer-events: none saat tersembunyi supaya toast tidak
+         "menangkap" klik user meski tidak terlihat di layar */
+      pointer-events: none;
+    }
+    /* JavaScript menambahkan class .notif-tampil untuk memunculkan toast */
+    .notif-box.notif-tampil { transform: translateY(0); opacity: 1; pointer-events: auto; }
+
+    /* Tiga varian warna toast sesuai jenis pesan */
+    .notif-success { background: #D1FAE5; color: #065F46; border-left: 4px solid #10B981; }
+    .notif-error   { background: #FEE2E2; color: #991B1B; border-left: 4px solid #EF4444; }
+    .notif-info    { background: #DBEAFE; color: #1E40AF; border-left: 4px solid #3B82F6; }
+
+
+    /* ── Modal / Dialog Detail Loker ── */
+    /*
+      Modal ditampilkan dengan display:flex (bukan block) supaya
+      kita bisa langsung pakai align-items + justify-content
+      untuk memusatkan .modal-box di tengah layar.
+
+      Saat tertutup, overlay pakai display:none ini OK untuk modal
+      karena tidak perlu animasi masuk/keluar yang mulus seperti toast.
+      JavaScript cukup toggle class .modal-buka.
+    */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0; z-index: 2000;
+      background: rgba(0,0,0,.45); align-items: center; justify-content: center;
+    }
+    .modal-overlay.modal-buka { display: flex; }
+
+    .modal-box {
+      background: white; border-radius: 16px; padding: 28px;
+      width: min(96vw, 480px); max-height: 85vh; overflow-y: auto;
+      box-shadow: 0 20px 60px rgba(0,0,0,.25);
+      animation: fadeInUp .3s ease;
+    }
+    .modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+    .modal-header-inner { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+
+    /* Tombol tutup (×) — pakai background:none supaya tidak ada kotak di belakangnya */
+    .modal-tutup { background: none; border: none; font-size: 20px; cursor: pointer; color: var(--gray-400); line-height: 1; }
+
+    /* Tabel di dalam modal untuk menampilkan detail loker */
+    .modal-table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+    .modal-table th { text-align: left; color: var(--gray-400); padding: 7px 10px; font-weight: 600; font-size: 12px; width: 110px; }
+    .modal-table td { padding: 7px 10px; color: var(--gray-800); border-bottom: 1px solid var(--gray-100); }
+
+
+    /* ── Loading Overlay (dipakai saat Fetch API nyaa jalan) ── */
+    /*
+      Overlay ini menutupi seluruh halaman saat data sedang dimuat dari API,
+      supaya user tidak bisa klik tombol lain dan memicu request ganda.
+      Spinner animasinya pakai border-top-color berbeda dari sisi lain
+      — trik klasik CSS untuk bikin lingkaran berputar.
+    */
+    .loading-overlay {
+      display: none; position: fixed; inset: 0; z-index: 3000;
+      background: rgba(0,0,0,.35); align-items: center; justify-content: center;
+    }
+    .loading-spinner {
+      width: 48px; height: 48px; border: 5px solid rgba(255,255,255,.3);
+      border-top-color: var(--teal); border-radius: 50%;
+      animation: spin .8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+
+    /* ── Tombol aksi di dalam tabel ── */
+    /*
+      Tombol ini sengaja dibuat kecil dan "kalem" (border tipis, background putih)
+      supaya tidak bersaing secara visual dengan konten tabel.
+      Warna baru muncul saat hover, ini memberi feedback bahwa tombol bisa diklik
+      tanpa bikin tabel terlalu ramai.
+    */
+    .btn-aksi {
+      padding: 4px 12px; border-radius: 5px; font-size: 12px; font-weight: 600;
+      cursor: pointer; border: 1.5px solid var(--gray-200); background: white;
+      color: var(--gray-600); transition: all .2s; font-family: 'DM Sans', sans-serif;
+    }
+    .btn-aksi:hover       { border-color: var(--blue);  color: var(--blue);  }
+    .btn-aksi-edit:hover  { border-color: var(--teal);  color: var(--teal);  }
+    .btn-aksi-hapus:hover { border-color: #EF4444;      color: #EF4444;      }
+
+
+    /* ── Tombol kecil di kartu loker ── */
+    /*
+      Sama dengan .btn-aksi tapi dipakai di kartu (bukan tabel).
+      Ukuran ikon (font-size: 14px) dipilih supaya tidak terlalu besar
+      di dalam kartu yang sudah padat informasi.
+    */
+    .btn-card-detail, .btn-card-edit, .btn-card-hapus {
+      background: none; border: 1.5px solid var(--gray-200); border-radius: 6px;
+      padding: 4px 8px; font-size: 14px; cursor: pointer;
+      transition: all .2s; line-height: 1;
+    }
+    .btn-card-detail:hover { border-color: var(--blue);  }
+    .btn-card-edit:hover   { border-color: var(--teal);  }
+    .btn-card-hapus:hover  { border-color: #EF4444;      }
+
+
+    /*
+      Highlight baris yang sedang dipilih di tabel.
+      JavaScript menambahkan class ini ke <tr> yang diklik user.
+      Warna biru muda (DBEAFE) dipilih karena tidak terlalu mencolok
+      tapi cukup jelas menandai "ini yang sedang aktif".
+    */
+    .row-selected { background-color: #DBEAFE !important; }
+
+
+    /* ── Panel Data Penyewa (hasil Fetch API) ── */
+    /*
+      Layout kartu penyewa: avatar bulat + nama + info di sebelahnya.
+      Avatar diisi inisial nama (dihasilkan JavaScript), bukan foto,
+      karena data dari API publik biasanya tidak menyertakan foto.
+    */
+    .penyewa-list { display: flex; flex-direction: column; gap: 10px; }
+    .penyewa-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px; background: var(--gray-50);
+      border-radius: 8px; border: 1px solid var(--gray-200);
+    }
+    .penyewa-avatar {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--blue-mid), var(--teal));
+      color: white; font-weight: 800; font-size: 15px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; /* supaya avatar tidak menyusut saat nama penyewa panjang */
+    }
+    .penyewa-info { flex: 1; display: flex; flex-direction: column; }
+    .penyewa-info strong { font-size: 13.5px; color: var(--gray-800); }
+    .penyewa-info span   { font-size: 12px;   color: var(--gray-400); }
+
+
+    /*
+      Warna teks untuk setiap opsi di dropdown status.
+      Ini murni kosmetik, supaya user lebih mudah membedakan
+      status saat memilih dari dropdown.
+    */
+    select#statusLoker option[value="tersedia"]    { color: #065F46; }
+    select#statusLoker option[value="disewa"]      { color: #92400E; }
+    select#statusLoker option[value="maintenance"] { color: #991B1B; }
+
+
+    /* ── Tombol "Muat Data API" ── */
+    /*
+      Tombol ini sengaja diberi gaya berbeda (gradient, shadow) dari tombol lain
+      supaya menonjol, ini adalah aksi utama di panel penyewanyaaa.
+      translateY(-2px) saat hover memberi efek "terangkat" yang
+      memberikan feedback visual bahwa tombol bisa diklik.
+    */
+    .btn-muat-api {
+      background: linear-gradient(135deg, var(--teal-dark), var(--teal));
+      color: white; border: none; padding: 9px 20px;
+      border-radius: var(--radius-sm); font-family: 'DM Sans', sans-serif;
+      font-size: 13px; font-weight: 600; cursor: pointer;
+      transition: transform .2s, box-shadow .2s;
+      box-shadow: 0 2px 8px rgba(15,184,169,.3);
+    }
+    .btn-muat-api:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(15,184,169,.4); }
+
+
+    /*
+      Card pembungkus panel penyewa.
+      Dipisah dari .table-card karena panel penyewa tidak punya header
+      dan tabel, jadi padding dan struktur dalamnya berbeda.
+    */
+    .panel-card {
+      background: var(--white); border-radius: var(--radius-lg);
+      padding: 22px; border: 1px solid var(--gray-200);
+      box-shadow: var(--shadow-sm); margin-bottom: 24px;
+    }
