@@ -33,11 +33,11 @@
         <span style="font-family:'Syne',sans-serif;font-weight:700;color:var(--blue-dark)">Detail Loker</span>
         <button class="modal-tutup" id="modal-tutup" type="button" title="Tutup">✕</button>
       </div>
-      <div id="modal-isi"><!-- JavaScript akan ngisi bagian ini saat modalny dibuka --></div>
+      <div id="modal-isi">
+      </div>
     </div>
   </div>
 
-  <!-- Wadah notifikasi toast, teks dan warnanya diatur oleh JavaScript -->
   <div class="notif-box" id="notif-box"></div>
 
 
@@ -59,14 +59,11 @@
       <li><a href="#transaksi">Transaksi</a></li>
       <li><a href="#penyewa">Penyewa</a></li>
     </ul>
-    <!-- type="button" penting di sini tanpanya, browser bisa
-         menganggap tombol ini sebagai submit form -->
     <button class="navbar-toggle" id="navToggle" type="button" aria-label="Toggle menu">
       <span></span><span></span><span></span>
     </button>
   </nav>
 
-  <!-- Menu dropdown khusus mobile muncul pas tombol hamburger diklik -->
   <div class="navbar-mobile-menu" id="mobileMenu">
     <a href="#dashboard">Dashboard</a>
     <a href="#loker">Data Loker</a>
@@ -87,8 +84,8 @@
       <div class="hero-badge">Universitas Jember · Fakultas Ilmu Komputer</div>
       <h1>SILOKER</h1>
       <h2>Sistem Informasi Penyewaan Loker Kampus</h2>
-      <p>Platform digital terpadu untuk pengelolaan loker kampus — pemantauan ketersediaan,
-         pencatatan transaksi, dan manajemen penyewa secara real-time.</p>
+      <p>Platform digital terpadu untuk pengelolaan loker kampus, pemantauan ketersediaan,
+         pencatatan transaksi, dan manajemen penyewa secara real time.</p>
       <div class="hero-stats">
         <div class="hero-stat">
           <span class="hero-stat-num" id="stat-total">0</span>
@@ -122,7 +119,7 @@
            JavaScript dari data yang sama dengan hero stats ini masih hardcode, jadi perlu diupdate manual jika data berubah.
       ============================================================ -->
       <aside class="sidebar">
-        <!-- Tombol ini toggle sidebar di mobile — class aktif diatur JavaScript -->
+        <!-- Tombol ini toggle sidebar di mobile, class aktif diatur JavaScript -->
         <button class="sidebar-toggle-btn" id="sidebarToggle" type="button">
           <span>🔽 Filter &amp; Navigasi</span>
           <span class="sidebar-toggle-icon">▾</span>
