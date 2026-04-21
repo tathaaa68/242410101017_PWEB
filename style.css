@@ -1,11 +1,11 @@
 /* =====================================================
-   IMPORT GOOGLE FONTS  (Tipografi - Bab 1.6)
+   IMPORT GOOGLE FONTS HEHEHE (Tipografi inii, Bab 1.6)
    Syne = display/heading | DM Sans = body
 ===================================================== */
 @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap');
 
 /* =====================================================
-   CSS VARIABLES  (Bab 1.5 Warna)
+   CSS VARIABLESNYAA  (Bab 1.5 Warna)
 ===================================================== */
 :root {
   --blue-dark:   #0D2E5E;
@@ -39,7 +39,7 @@
 }
 
 /* =====================================================
-   RESET & BASE  (Box Model - Bab 1.9)
+   NINII RESET & BASE  (Box Model - Bab 1.9)
 ===================================================== */
 *, *::before, *::after {
   box-sizing: border-box;
@@ -62,9 +62,8 @@ img { max-width: 100%; display: block; }
 a  { color: inherit; text-decoration: none; }
 
 /* =====================================================
-   (1) NAVBAR FIXED RESPONSIF – FLEXBOX  (Bab 2.2, 1.10)
+   INIII NAVBAR FIXED RESPONSIF, FLEXBOX  (Bab 2.2, 1.10)
 ===================================================== */
-
 .navbar {
   position: fixed;
   top: 0; left: 0;
@@ -84,14 +83,7 @@ a  { color: inherit; text-decoration: none; }
   display: flex;
   align-items: center;
   gap: 10px;
-  font-weight: 700;
-  font-size: 16px;
-  color: white;
-}
-.logo {
-  width: 32px;
-  height: 32px;
-  object-fit: contain;
+  flex-shrink: 0;
 }
 
 .navbar-logo-icon {
@@ -182,7 +174,7 @@ a  { color: inherit; text-decoration: none; }
 .navbar-mobile-menu a:hover { background: rgba(255,255,255,.12); }
 
 /* =====================================================
-   (2) HERO SECTION – GRADIENT BACKGROUND + TEKS OVERLAY
+   HERO SECTION, GRADIENT BACKGROUND + TEKS OVERLAY
    (Bab 1.7 Background, 2.2 Flexbox centering)
 ===================================================== */
 .hero {
@@ -287,7 +279,7 @@ a  { color: inherit; text-decoration: none; }
   letter-spacing: 1px;
 }
 
-/* =====================================================
+/* ===================================================
    LAYOUT WRAPPER  (Bab 3.4 Mobile-first, Bab 2.2 Flex)
 ===================================================== */
 .page-body { display: flex; flex-direction: column; }
@@ -298,9 +290,9 @@ a  { color: inherit; text-decoration: none; }
   flex: 1;
 }
 
-/* =====================================================
-   (7) SIDEBAR FILTER – CHECKBOX STYLING  (Bab 1.4, 1.9)
-===================================================== */
+/* ==================================================
+   INIII SIDEBAR FILTER, CHECKBOX STYLING  (Bab 1.4, 1.9)
+=================================================== */
 .sidebar {
   background: var(--white);
   padding: 0;
@@ -430,18 +422,18 @@ input[type='checkbox']:focus {
   background: rgba(37,99,235,.04);
 }
 
-/* =====================================================
+/* ======================
    MAIN CONTENT
-===================================================== */
+=============================== */
 main {
   flex: 1;
   padding: 24px 16px;
   background: var(--gray-100);
 }
 
-/* =====================================================
+/* ===========================
    SECTION HEADING
-===================================================== */
+=============================== */
 .section-heading {
   display: flex;
   align-items: center;
@@ -472,7 +464,7 @@ main {
 .section-subtitle { font-size: 13px; color: var(--gray-400); }
 
 /* =====================================================
-   (3) GRID KARTU LOKER  (Bab 2.3 CSS Grid)
+   INIII GRID KARTU LOKER  (Bab 2.3 CSS Grid)
    Mobile: 1 | Tablet: 2 | Desktop: 3 kolom  (4)
 ===================================================== */
 .loker-grid {
@@ -559,7 +551,7 @@ main {
 }
 
 /* =====================================================
-   BADGE STATUS  (Bab 1.5 Warna)
+   INIIIII BADGE STATUS  (Bab 1.5 Warna)
 ===================================================== */
 .badge {
   display: inline-flex;
@@ -584,7 +576,7 @@ main {
 .badge-maintenance { background: var(--red-bg);    color: var(--red-text); }
 
 /* =====================================================
-   (5) FORM PENCARIAN DATA  (Bab 1.4, 1.8, 2.2, 4.1)
+   INIII FORM PENCARIAN DATA  (Bab 1.4, 1.8, 2.2, 4.1)
 ===================================================== */
 .search-bar-wrapper {
   background: var(--white);
@@ -625,7 +617,7 @@ main {
   letter-spacing: .3px;
 }
 
-/* Selektor atribut – Bab 1.4 */
+/* Selektor atribut, Bab 1.4 */
 input[type='text'],
 input[type='number'],
 input[type='date'],
@@ -644,7 +636,7 @@ textarea {
   transition: border-color var(--transition), box-shadow var(--transition), background var(--transition);
 }
 
-/* Pseudo-class :focus – Bab 1.4 & 4.1 */
+/* Pseudo-class :focus, Bab 1.4 & 4.1 */
 input[type='text']:focus,
 input[type='number']:focus,
 input[type='date']:focus,
@@ -695,7 +687,7 @@ textarea { resize: vertical; }
 
 .btn-secondary:hover { border-color: var(--blue); color: var(--blue); }
 
-/* Form tambah data loker */
+/* INIIII Form tambah data loker */
 .form-card {
   background: var(--white);
   border-radius: var(--radius-lg);
@@ -778,7 +770,7 @@ input[type='reset'] {
 input[type='reset']:hover { border-color: var(--blue); color: var(--blue); }
 
 /* =====================================================
-   (6) TABEL DATA LOKER  (Bab 1.4, 1.8)
+   INII TABEL DATA LOKER  (Bab 1.4, 1.8)
    Zebra striping, border, padding, hover row
 ===================================================== */
 .table-card {
@@ -846,10 +838,10 @@ tbody td {
   vertical-align: middle;
 }
 
-/* Zebra striping – nth-child – Bab 1.4 */
+/* Zebra striping, Bab 1.4 */
 tbody tr:nth-child(even) { background-color: #FAFBFF; }
 
-/* Hover row – Bab 1.4 */
+/* Hover row, Bab 1.4 */
 tbody tr:hover {
   background-color: #EFF6FF;
   transition: background-color 0.2s ease;
@@ -882,7 +874,7 @@ hr {
 }
 
 /* =====================================================
-   (8) FOOTER RESPONSIF 3 KOLOM  (Bab 2.3 Grid, 3.3 MQ)
+   INII FOOTER RESPONSIF 3 KOLOM  (Bab 2.3 Grid, 3.3 MQ)
 ===================================================== */
 .footer {
   background: linear-gradient(135deg, var(--blue-dark), #0A1628);
@@ -892,7 +884,7 @@ hr {
 
 .footer-grid {
   display: grid;
-  grid-template-columns: 1fr;        /* Mobile: 1 kolom */
+  grid-template-columns: 1fr;        
   gap: 32px;
   max-width: 1100px;
   margin: 0 auto 36px;
@@ -981,8 +973,8 @@ hr {
 
 /* =====================================================
    CSS ANIMASI – @keyframes  (Bab 4.2)
-   Animasi (1) fadeInDown → hero
-   Animasi (2) fadeInUp   → kartu loker
+   Animasi (1) fadeInDown -> hero
+   Animasi (2) fadeInUp   -> kartu loker
 ===================================================== */
 @keyframes fadeInDown {
   from { opacity: 0; transform: translateY(-24px); }
@@ -1000,7 +992,7 @@ hr {
 }
 
 /* =====================================================
-   MEDIA QUERY – RESPONSIF  (Bab 3.3, 3.4 Mobile-First)
+   INII MEDIA QUERY,, RESPONSIF  (Bab 3.3, 3.4)
 ===================================================== */
 
 /* ── Tablet: min-width 640px ────────────────────── */
