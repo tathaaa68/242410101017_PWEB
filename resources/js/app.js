@@ -16,30 +16,24 @@ let daftarLoker = [
   { id: 5, kode: 'LKR-E408', lokasi: 'Gedung E / Lantai 4', ukuran: 'sedang', harga: 5000, pengelola: 'Dian Pratama',  status: 'disewa'      },
   { id: 6, kode: 'LKR-F215', lokasi: 'Gedung F / Lantai 2', ukuran: 'kecil',  harga: 3000, pengelola: 'Hendra Kusuma', status: 'tersedia'    },
 ];
-
 let idEditAktif = null;
 let hasilFilter = [...daftarLoker];
-
 console.log(`Aplikasi ${NAMA_APLIKASI} v${VERSI} berhasil dimuat`);
 console.log(`Jumlah loker terdaftar: ${daftarLoker.length} dari ${MAX_LOKER} total kapasitas`);
 
 const formatRupiah = (angka) =>
   'Rp ' + Number(angka).toLocaleString('id-ID');
-
 const kapitalisasi = (str) =>
   str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
-
 const getBadgeClass = (status) =>
   status === 'tersedia'   ? 'badge-tersedia'    :
   status === 'disewa'     ? 'badge-disewa'       :
                             'badge-maintenance';
-
 function hitungStatistik(arr) {
   const total       = arr.length;
   const tersedia    = arr.filter(l => l.status === 'tersedia').length;
   const disewa      = arr.filter(l => l.status === 'disewa').length;
   const maintenance = arr.filter(l => l.status === 'maintenance').length;
-
   const totalHarga = arr
     .filter(l => l.status === 'tersedia')
     .reduce((total, l) => total + l.harga, 0);
@@ -55,7 +49,6 @@ function cariLoker(arr, katakunci, statusFilter) {
       loker.kode.toLowerCase().includes(kw) ||
       loker.lokasi.toLowerCase().includes(kw) ||
       loker.pengelola.toLowerCase().includes(kw);
-
     const cocokStatus = !statusFilter || loker.status === statusFilter;
 
     return cocokTeks && cocokStatus;
@@ -73,7 +66,6 @@ const urutkanLoker = (arr, kolom = 'kode', arah = 'asc') => {
 };
 
 const buatIdBaru = () => Math.max(0, ...daftarLoker.map(l => l.id)) + 1;
-
 
 const elNavToggle      = document.getElementById('navToggle');
 const elMobileMenu     = document.getElementById('mobileMenu');
@@ -93,7 +85,6 @@ const elModalTutup     = document.getElementById('modal-tutup');
 const elLoadingOverlay = document.getElementById('loading-overlay');
 
 const elStatNums = document.querySelectorAll('.hero-stat-num');
-
 const INPUT = {
   kode       : document.getElementById('kodeLoker'),
   lokasi     : document.getElementById('lokasiLoker'),
@@ -161,9 +152,7 @@ function renderKartu(arr) {
 
 function renderTabel(arr) {
   if (!elTbody) return;
-
   if (elTabelTotal) elTabelTotal.textContent = `${arr.length} loker ditampilkan`;
-
   if (arr.length === 0) {
     elTbody.innerHTML = `
       <tr>
@@ -208,7 +197,6 @@ function updateAngkaSidebar() {
     if (stat[key] !== undefined) el.textContent = stat[key];
   });
 }
-
 
 const aturanValidasi = {
   kodeLoker: {
@@ -311,14 +299,17 @@ function isiFormUntukEdit(loker) {
   if (INPUT.harga)     INPUT.harga.value     = harga;
   if (INPUT.pengelola) INPUT.pengelola.value = pengelola;
   if (INPUT.status)    INPUT.status.value    = status;
+
   idEditAktif = loker.id;
   if (elFormTitle) elFormTitle.textContent = `Edit Loker: ${kode}`;
   if (elBtnSubmit) elBtnSubmit.value = 'Simpan Perubahan';
+
   elFormLoker?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 function tampilkanModal(loker) {
   if (!elModalOverlay || !elModalIsi) return;
+
   const detail = { ...loker };
 
   elModalIsi.innerHTML = `
@@ -339,6 +330,7 @@ function tampilkanModal(loker) {
 
   elModalOverlay.classList.add('modal-buka');
 }
+
 elNavToggle?.addEventListener('click', () => {
   elNavToggle.classList.toggle('open');
   elMobileMenu.classList.toggle('open');
@@ -387,7 +379,6 @@ function jalankanPencarian() {
   renderKartu(hasilFilter);
   renderTabel(hasilFilter);
 }
-
 CARI.kode?.addEventListener('input',   jalankanPencarian);
 CARI.lokasi?.addEventListener('input', jalankanPencarian);
 CARI.status?.addEventListener('change', jalankanPencarian);
@@ -434,7 +425,6 @@ elFormLoker?.addEventListener('submit', function(e) {
     daftarLoker.push(lokerBaru);
     tampilkanNotifikasi(`Loker ${dataForm.kode} berhasil ditambahkan`);
   }
-
   simpanKeLocalStorage();
 
   hasilFilter = [...daftarLoker];
@@ -530,10 +520,7 @@ INPUT.ukuran?.addEventListener('change', function() {
   const hargaDefault = HARGA_MAP[this.value];
   if (hargaDefault && INPUT.harga) INPUT.harga.value = hargaDefault;
 });
-
-
 const KUNCI_STORAGE = 'siloker_data';
-
 function simpanKeLocalStorage() {
   try {
     localStorage.setItem(KUNCI_STORAGE, JSON.stringify(daftarLoker));
@@ -542,7 +529,6 @@ function simpanKeLocalStorage() {
     console.error('Gagal menyimpan:', err);
   }
 }
-
 function muatDariLocalStorage() {
   try {
     const dataString = localStorage.getItem(KUNCI_STORAGE);
@@ -557,7 +543,6 @@ function muatDariLocalStorage() {
   }
 }
 
-
 function aturLoading(tampil) {
   if (!elLoadingOverlay) return;
   elLoadingOverlay.style.display = tampil ? 'flex' : 'none';
@@ -566,7 +551,6 @@ function aturLoading(tampil) {
 async function ambilDataPenyewaAPI() {
   try {
     aturLoading(true); 
-
     const [resUsers, resPosts] = await Promise.all([
       fetch('https://jsonplaceholder.typicode.com/users'),
       fetch('https://jsonplaceholder.typicode.com/posts?_limit=6')
@@ -592,7 +576,6 @@ async function ambilDataPenyewaAPI() {
     aturLoading(false); 
   }
 }
-
 function renderPanelPenyewa(users) {
   const el = document.getElementById('panel-penyewa');
   if (!el) return;
@@ -634,7 +617,6 @@ async function ambilDetailPenyewa(userId) {
     const user  = await resUser.json();
     const posts = await resPosts.json();
 
-    // tampilkan detail di modal
     if (elModalIsi) {
       elModalIsi.innerHTML = `
         <div class="modal-header-inner">
@@ -648,17 +630,7 @@ async function ambilDetailPenyewa(userId) {
           <tr><th>Website</th>    <td>${user.website}</td></tr>
           <tr><th>Perusahaan</th> <td>${user.company.name}</td></tr>
         </table>
-        <div style="margin-top:14px">
-          <div style="font-size:11px; font-weight:700; color:var(--gray-400); text-transform:uppercase; letter-spacing:1px; margin-bottom:8px">
-            Riwayat Sewa (3 terakhir)
-          </div>
-          ${posts.map(p => `
-            <div style="background:var(--gray-50); border-radius:6px; padding:10px; margin-bottom:6px; border-left:3px solid var(--teal)">
-              <div style="font-size:12.5px; font-weight:600; color:var(--gray-800)">
-                ${p.title.substring(0, 50)}…
-              </div>
-            </div>`).join('')}
-        </div>`;
+        `;
     }
 
     elModalOverlay?.classList.add('modal-buka');
@@ -687,8 +659,6 @@ function tampilkanErrorFetch() {
 
 document.getElementById('btn-muat-api')?.addEventListener('click', ambilDataPenyewaAPI);
 
-
-
 document.addEventListener('DOMContentLoaded', () => {
   console.log('Halaman selesai dimuat, mulai inisialisasi...');
 
@@ -700,12 +670,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   updateAngkaHero();
   updateAngkaSidebar();
-
   animasiHitungAngka();
-
   ambilDataPenyewaAPI();
 });
-
 function animasiHitungAngka() {
   const stat   = hitungStatistik(daftarLoker);
   const target = [stat.total, stat.tersedia, stat.disewa, daftarLoker.length];

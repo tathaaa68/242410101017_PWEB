@@ -1,445 +1,636 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="SILOKER — Sistem Informasi Penyewaan Loker Kampus Universitas Jember" />
-  <title>SILOKER – Sistem Informasi Loker Kampus</title>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta
+            name="description"
+            content="SILOKER — Sistem Informasi Penyewaan Loker Kampus Universitas Jember"
+        />
+        <title>SILOKER – Sistem Informasi Loker Kampus</title>
 
-  <!--
-    Favicon: pastikan nama file ga ada spasi.
-    Browser kadang gagal load file dengan spasi di path-nya.
-    Kalau filenya masih "ikon logo.png", rename dulu jadi "ikon-logo.png".
-  -->
-  <link rel="icon" href="ikon logo.png">
-  <link rel="stylesheet" href="style.css">
-
-</head>
-<body>
-
-  <!-- ============================================================
-       LOADING OVERLAY
-       Menutupi seluruh layar saat Fetch API sedang berjalan.
-       Ditampilkan/disembunyikan oleh JavaScript di script.js.
-  ============================================================ -->
-  <div class="loading-overlay" id="loading-overlay">
-    <div class="loading-spinner"></div>
-  </div>
-
-  <!-- ============================================================
-       ini MODAL DETAIL LOKER
-       Konten di dalam #modalisi diisi sepenuhnya oleh JavaScript
-       saat user menekan tombol "Detail" di kartu atau tabel.
-       Tombol tutup (#modal-tutup) juga dihubungkan event listenernya di script.js.
-  ============================================================ -->
-  <div class="modal-overlay" id="modal-overlay">
-    <div class="modal-box">
-      <div class="modal-header">
-        <span style="font-family:'Syne',sans-serif;font-weight:700;color:var(--blue-dark)">Detail Loker</span>
-        <button class="modal-tutup" id="modal-tutup" type="button" title="Tutup">✕</button>
-      </div>
-      <div id="modal-isi"><!-- JavaScript akan ngisi bagian ini saat modalny dibuka --></div>
-    </div>
-  </div>
-
-  <!-- Wadah notifikasi toast, teks dan warnanya diatur oleh JavaScript -->
-  <div class="notif-box" id="notif-box"></div>
-
-
-  <!-- ============================================================
-      INI NAVBAR FIXED RESPONSIF
-       Navbar ini "nempel" di atas layar (position: fixed di CSS)
-       supaya user bisa navigasi kapan saja tanpa harus scroll ke atas.
-       Di layar kecil (mobile), menu disembunyikan dan diganti dengan
-       tombol hamburger (#navToggle) yang memunculkan #mobileMenu
-  ============================================================ -->
-  <nav class="navbar">
-    <div class="navbar-logo">
-      <img src="ikon logo.png" alt="logo" class="logo-img">
-      <span class="logo-text">SILOKER</span>
-    </div>
-    <ul class="navbar-menu">
-      <li><a href="#dashboard" class="active">Dashboard</a></li>
-      <li><a href="#loker">Data Loker</a></li>
-      <li><a href="#transaksi">Transaksi</a></li>
-      <li><a href="#penyewa">Penyewa</a></li>
-    </ul>
-    <!-- type="button" penting di sini tanpanya, browser bisa
-         menganggap tombol ini sebagai submit form -->
-    <button class="navbar-toggle" id="navToggle" type="button" aria-label="Toggle menu">
-      <span></span><span></span><span></span>
-    </button>
-  </nav>
-
-  <!-- Menu dropdown khusus mobile muncul pas tombol hamburger diklik -->
-  <div class="navbar-mobile-menu" id="mobileMenu">
-    <a href="#dashboard">Dashboard</a>
-    <a href="#loker">Data Loker</a>
-    <a href="#transaksi">Transaksi Penyewaan</a>
-    <a href="#penyewa">Data Penyewa</a>
-  </div>
-
-  <div class="page-body">
-
-    <!-- ============================================================
-         INI HERO SECTION
-         Bagian pembuka halaman dengan statistik ringkas.
-         Angka di dalam .herostatnum (id="stat-*") awalnya 0,
-         lalu diperbarui oleh JavaScript setelah data loker dimuat
-         jadi user selalu lihat angka yang akurat, bukan angka statis
-    ============================================================ -->
-    <section class="hero" id="dashboard">
-      <div class="hero-badge">Universitas Jember · Fakultas Ilmu Komputer</div>
-      <h1>SILOKER</h1>
-      <h2>Sistem Informasi Penyewaan Loker Kampus</h2>
-      <p>Platform digital terpadu untuk pengelolaan loker kampus — pemantauan ketersediaan,
-         pencatatan transaksi, dan manajemen penyewa secara real-time.</p>
-      <div class="hero-stats">
-        <div class="hero-stat">
-          <span class="hero-stat-num" id="stat-total">0</span>
-          <span class="hero-stat-label">Total Loker</span>
+        <link rel="icon" href="ikon logo.png" />
+        <link rel="stylesheet" href="style.css" />
+    </head>
+    <body>
+        <div class="loading-overlay" id="loading-overlay">
+            <div class="loading-spinner"></div>
         </div>
-        <div class="hero-stat">
-          <span class="hero-stat-num" id="stat-tersedia">0</span>
-          <span class="hero-stat-label">Tersedia</span>
-        </div>
-        <div class="hero-stat">
-          <span class="hero-stat-num" id="stat-disewa">0</span>
-          <span class="hero-stat-label">Disewa</span>
-        </div>
-        <div class="hero-stat">
-          <span class="hero-stat-num" id="stat-aktif">0</span>
-          <span class="hero-stat-label">Terdaftar</span>
-        </div>
-      </div>
-    </section>
 
-
-    <div class="content-area">
-
-      <!-- ============================================================
-           INIII SIDEBAR FILTER
-           Sidebar ini berisi checkbox untuk memfilter data loker
-           berdasarkan status, ukuran, gedung, dan harga.
-           Setiap checkbox dengan class .filter status punya value yang
-           dibaca oleh fungsi filterDariSidebar() di script.js.
-           Angka di .filter-count (misalnya "47") idealnya diisi
-           JavaScript dari data yang sama dengan hero stats ini masih hardcode, jadi perlu diupdate manual jika data berubah.
-      ============================================================ -->
-      <aside class="sidebar">
-        <!-- Tombol ini toggle sidebar di mobile — class aktif diatur JavaScript -->
-        <button class="sidebar-toggle-btn" id="sidebarToggle" type="button">
-          <span>🔽 Filter &amp; Navigasi</span>
-          <span class="sidebar-toggle-icon">▾</span>
-        </button>
-
-        <div class="sidebar-content" id="sidebarContent">
-
-          <div class="sidebar-section">
-            <div class="sidebar-section-title">Status Loker</div>
-            <label class="filter-item" for="filter-tersedia">
-              <input type="checkbox" id="filter-tersedia" class="filter-status" value="tersedia" checked>
-              <span class="filter-label">Tersedia</span>
-              <span class="filter-count" data-stat="tersedia">47</span>
-            </label>
-            <label class="filter-item" for="filter-disewa">
-              <input type="checkbox" id="filter-disewa" class="filter-status" value="disewa" checked>
-              <span class="filter-label">Disewa</span>
-              <span class="filter-count" data-stat="disewa">68</span>
-            </label>
-            <label class="filter-item" for="filter-maintenance">
-              <input type="checkbox" id="filter-maintenance" class="filter-status" value="maintenance" checked>
-              <span class="filter-label">Maintenance</span>
-              <span class="filter-count" data-stat="maintenance">5</span>
-            </label>
-          </div>
-
-          <div class="sidebar-section">
-            <div class="sidebar-section-title">Ukuran Loker</div>
-            <label class="filter-item"><input type="checkbox" checked><span class="filter-label">Kecil</span><span class="filter-count">40</span></label>
-            <label class="filter-item"><input type="checkbox" checked><span class="filter-label">Sedang</span><span class="filter-count">50</span></label>
-            <label class="filter-item"><input type="checkbox" checked><span class="filter-label">Besar</span><span class="filter-count">30</span></label>
-          </div>
-
-          <div class="sidebar-section">
-            <div class="sidebar-section-title">Gedung</div>
-            <label class="filter-item"><input type="checkbox" checked><span class="filter-label">Gedung A</span><span class="filter-count">24</span></label>
-            <label class="filter-item"><input type="checkbox" checked><span class="filter-label">Gedung B</span><span class="filter-count">20</span></label>
-            <label class="filter-item"><input type="checkbox"><span class="filter-label">Gedung C</span><span class="filter-count">18</span></label>
-            <label class="filter-item"><input type="checkbox"><span class="filter-label">Gedung D &amp; E</span><span class="filter-count">36</span></label>
-          </div>
-
-          <div class="sidebar-section">
-            <div class="sidebar-section-title">Harga / Hari</div>
-            <label class="filter-item"><input type="checkbox" checked><span class="filter-label">Rp 3.000</span><span class="filter-count">40</span></label>
-            <label class="filter-item"><input type="checkbox" checked><span class="filter-label">Rp 5.000</span><span class="filter-count">50</span></label>
-            <label class="filter-item"><input type="checkbox" checked><span class="filter-label">Rp 8.000</span><span class="filter-count">30</span></label>
-          </div>
-
-          <button class="btn-filter-reset" type="button">↺ Reset Filter</button>
-        </div>
-      </aside>
-
-
-      <main>
-
-        <!-- ============================================================
-             INIII FORM PENCARIAN DATA
-             Pencarian berjalan saat tombol "Cari Loker" diklik.
-             JavaScript membaca nilai dari ketiga field ini lalu
-             memfilter array data loker dan ngerender ulang kartu + tabel.
-        ============================================================ -->
-        <div class="search-bar-wrapper">
-          <h4>🔍 Cari &amp; Filter Data Loker</h4>
-          <div class="search-row">
-            <div class="search-field">
-              <label for="searchKode">Kode / Pengelola</label>
-              <input type="text" id="searchKode" placeholder="Contoh: LKR-A101 atau Budi" />
+        <div class="modal-overlay" id="modal-overlay">
+            <div class="modal-box">
+                <div class="modal-header">
+                    <span
+                        style="
+                            font-family: &quot;Syne&quot;, sans-serif;
+                            font-weight: 700;
+                            color: var(--blue-dark);
+                        "
+                        >Detail Loker</span
+                    >
+                    <button
+                        class="modal-tutup"
+                        id="modal-tutup"
+                        type="button"
+                        title="Tutup"
+                    >
+                        ✕
+                    </button>
+                </div>
+                <div id="modal-isi"></div>
             </div>
-            <div class="search-field">
-              <label for="searchLokasi">Lokasi / Gedung</label>
-              <input type="text" id="searchLokasi" placeholder="Contoh: Gedung A" />
+        </div>
+        <div class="notif-box" id="notif-box"></div>
+
+        <nav class="navbar">
+            <div class="navbar-logo">
+                <img src="ikon logo.png" alt="logo" class="logo-img" />
+                <span class="logo-text">SILOKER</span>
             </div>
-            <div class="search-field">
-              <label for="searchStatus">Status</label>
-              <select id="searchStatus">
-                <option value="">Semua Status</option>
-                <option value="tersedia">Tersedia</option>
-                <option value="disewa">Disewa</option>
-                <option value="maintenance">Maintenance</option>
-              </select>
+            <ul class="navbar-menu">
+                <li><a href="#dashboard" class="active">Dashboard</a></li>
+                <li><a href="#loker">Data Loker</a></li>
+                <li><a href="#transaksi">Transaksi</a></li>
+                <li><a href="#penyewa">Penyewa</a></li>
+            </ul>
+            <button
+                class="navbar-toggle"
+                id="navToggle"
+                type="button"
+                aria-label="Toggle menu"
+            >
+                <span></span><span></span><span></span>
+            </button>
+        </nav>
+
+        <div class="navbar-mobile-menu" id="mobileMenu">
+            <a href="#dashboard">Dashboard</a>
+            <a href="#loker">Data Loker</a>
+            <a href="#transaksi">Transaksi Penyewaan</a>
+            <a href="#penyewa">Data Penyewa</a>
+        </div>
+
+        <div class="page-body">
+            <section class="hero" id="dashboard">
+                <div class="hero-badge">
+                    Universitas Jember · Fakultas Ilmu Komputer
+                </div>
+                <h1>SILOKER</h1>
+                <h2>Sistem Informasi Penyewaan Loker Kampus</h2>
+                <p>
+                    Platform digital terpadu untuk pengelolaan loker kampus,
+                    pemantauan ketersediaan, pencatatan transaksi, dan manajemen
+                    penyewa secara real time.
+                </p>
+                <div class="hero-stats">
+                    <div class="hero-stat">
+                        <span class="hero-stat-num" id="stat-total">0</span>
+                        <span class="hero-stat-label">Total Loker</span>
+                    </div>
+                    <div class="hero-stat">
+                        <span class="hero-stat-num" id="stat-tersedia">0</span>
+                        <span class="hero-stat-label">Tersedia</span>
+                    </div>
+                    <div class="hero-stat">
+                        <span class="hero-stat-num" id="stat-disewa">0</span>
+                        <span class="hero-stat-label">Disewa</span>
+                    </div>
+                    <div class="hero-stat">
+                        <span class="hero-stat-num" id="stat-aktif">0</span>
+                        <span class="hero-stat-label">Terdaftar</span>
+                    </div>
+                </div>
+            </section>
+
+            <div class="content-area">
+                <aside class="sidebar">
+                    <button
+                        class="sidebar-toggle-btn"
+                        id="sidebarToggle"
+                        type="button"
+                    >
+                        <span>🔽 Filter &amp; Navigasi</span>
+                        <span class="sidebar-toggle-icon">▾</span>
+                    </button>
+
+                    <div class="sidebar-content" id="sidebarContent">
+                        <div class="sidebar-section">
+                            <div class="sidebar-section-title">
+                                Status Loker
+                            </div>
+                            <label class="filter-item" for="filter-tersedia">
+                                <input
+                                    type="checkbox"
+                                    id="filter-tersedia"
+                                    class="filter-status"
+                                    value="tersedia"
+                                    checked
+                                />
+                                <span class="filter-label">Tersedia</span>
+                                <span class="filter-count" data-stat="tersedia"
+                                    >47</span
+                                >
+                            </label>
+                            <label class="filter-item" for="filter-disewa">
+                                <input
+                                    type="checkbox"
+                                    id="filter-disewa"
+                                    class="filter-status"
+                                    value="disewa"
+                                    checked
+                                />
+                                <span class="filter-label">Disewa</span>
+                                <span class="filter-count" data-stat="disewa"
+                                    >68</span
+                                >
+                            </label>
+                            <label class="filter-item" for="filter-maintenance">
+                                <input
+                                    type="checkbox"
+                                    id="filter-maintenance"
+                                    class="filter-status"
+                                    value="maintenance"
+                                    checked
+                                />
+                                <span class="filter-label">Maintenance</span>
+                                <span
+                                    class="filter-count"
+                                    data-stat="maintenance"
+                                    >5</span
+                                >
+                            </label>
+                        </div>
+
+                        <div class="sidebar-section">
+                            <div class="sidebar-section-title">
+                                Ukuran Loker
+                            </div>
+                            <label class="filter-item"
+                                ><input type="checkbox" checked /><span
+                                    class="filter-label"
+                                    >Kecil</span
+                                ><span class="filter-count">40</span></label
+                            >
+                            <label class="filter-item"
+                                ><input type="checkbox" checked /><span
+                                    class="filter-label"
+                                    >Sedang</span
+                                ><span class="filter-count">50</span></label
+                            >
+                            <label class="filter-item"
+                                ><input type="checkbox" checked /><span
+                                    class="filter-label"
+                                    >Besar</span
+                                ><span class="filter-count">30</span></label
+                            >
+                        </div>
+
+                        <div class="sidebar-section">
+                            <div class="sidebar-section-title">Gedung</div>
+                            <label class="filter-item"
+                                ><input type="checkbox" checked /><span
+                                    class="filter-label"
+                                    >Gedung A</span
+                                ><span class="filter-count">24</span></label
+                            >
+                            <label class="filter-item"
+                                ><input type="checkbox" checked /><span
+                                    class="filter-label"
+                                    >Gedung B</span
+                                ><span class="filter-count">20</span></label
+                            >
+                            <label class="filter-item"
+                                ><input type="checkbox" /><span
+                                    class="filter-label"
+                                    >Gedung C</span
+                                ><span class="filter-count">18</span></label
+                            >
+                            <label class="filter-item"
+                                ><input type="checkbox" /><span
+                                    class="filter-label"
+                                    >Gedung D &amp; E</span
+                                ><span class="filter-count">36</span></label
+                            >
+                        </div>
+
+                        <div class="sidebar-section">
+                            <div class="sidebar-section-title">
+                                Harga / Hari
+                            </div>
+                            <label class="filter-item"
+                                ><input type="checkbox" checked /><span
+                                    class="filter-label"
+                                    >Rp 3.000</span
+                                ><span class="filter-count">40</span></label
+                            >
+                            <label class="filter-item"
+                                ><input type="checkbox" checked /><span
+                                    class="filter-label"
+                                    >Rp 5.000</span
+                                ><span class="filter-count">50</span></label
+                            >
+                            <label class="filter-item"
+                                ><input type="checkbox" checked /><span
+                                    class="filter-label"
+                                    >Rp 8.000</span
+                                ><span class="filter-count">30</span></label
+                            >
+                        </div>
+
+                        <button class="btn-filter-reset" type="button">
+                            ↺ Reset Filter
+                        </button>
+                    </div>
+                </aside>
+
+                <main>
+                    <div class="search-bar-wrapper">
+                        <h4>🔍 Cari &amp; Filter Data Loker</h4>
+                        <div class="search-row">
+                            <div class="search-field">
+                                <label for="searchKode">Kode / Pengelola</label>
+                                <input
+                                    type="text"
+                                    id="searchKode"
+                                    placeholder="Contoh: LKR-A101 atau Budi"
+                                />
+                            </div>
+                            <div class="search-field">
+                                <label for="searchLokasi"
+                                    >Lokasi / Gedung</label
+                                >
+                                <input
+                                    type="text"
+                                    id="searchLokasi"
+                                    placeholder="Contoh: Gedung A"
+                                />
+                            </div>
+                            <div class="search-field">
+                                <label for="searchStatus">Status</label>
+                                <select id="searchStatus">
+                                    <option value="">Semua Status</option>
+                                    <option value="tersedia">Tersedia</option>
+                                    <option value="disewa">Disewa</option>
+                                    <option value="maintenance">
+                                        Maintenance
+                                    </option>
+                                </select>
+                            </div>
+                            <button class="btn-search" type="button">
+                                Cari Loker
+                            </button>
+                            <button class="btn-secondary" type="button">
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+
+                    <section id="loker">
+                        <div class="section-heading">
+                            <h3 class="section-title">Data Loker</h3>
+                            <span class="section-subtitle" id="subtitel-loker"
+                                >Memuat data…</span
+                            >
+                        </div>
+                        <div class="loker-grid" id="loker-grid"></div>
+                    </section>
+
+                    <div class="table-card">
+                        <div class="table-card-header">
+                            <span class="table-card-title"
+                                >Daftar Lengkap Data Loker</span
+                            >
+                            <span class="table-total" id="tabel-total"
+                                >Memuat…</span
+                            >
+                        </div>
+                        <div class="table-container">
+                            <table id="tabel-loker">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Kode Loker</th>
+                                        <th>Lokasi</th>
+                                        <th>Ukuran</th>
+                                        <th>Harga / Hari</th>
+                                        <th>Status</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tabel-tbody"></tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="7" id="tabel-footer">
+                                            Total data ditampilkan: 0 loker
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+
+                    <hr />
+
+                    <div class="form-card" id="form-section">
+                        <div
+                            class="section-heading"
+                            style="margin-bottom: 16px"
+                        >
+                            <h3 class="section-title" id="form-title">
+                                Tambah Data Loker
+                            </h3>
+                        </div>
+
+                        <form id="form-loker" novalidate>
+                            <fieldset>
+                                <legend>Data Loker Baru</legend>
+                                <div class="form-grid">
+                                    <p>
+                                        <label for="kodeLoker"
+                                            >Kode Loker
+                                            <span style="color: #ef4444"
+                                                >*</span
+                                            ></label
+                                        >
+                                        <input
+                                            type="text"
+                                            id="kodeLoker"
+                                            name="kodeLoker"
+                                            placeholder="Contoh: LKR-A101"
+                                        />
+                                        <span
+                                            class="error-msg"
+                                            id="error-kodeLoker"
+                                        ></span>
+                                    </p>
+
+                                    <p>
+                                        <label for="lokasiLoker"
+                                            >Lokasi / Gedung
+                                            <span style="color: #ef4444"
+                                                >*</span
+                                            ></label
+                                        >
+                                        <input
+                                            type="text"
+                                            id="lokasiLoker"
+                                            name="lokasiLoker"
+                                            placeholder="Contoh: Gedung A / Lantai 2"
+                                        />
+                                        <span
+                                            class="error-msg"
+                                            id="error-lokasiLoker"
+                                        ></span>
+                                    </p>
+
+                                    <p>
+                                        <label for="ukuranLoker"
+                                            >Ukuran Loker</label
+                                        >
+                                        <select
+                                            id="ukuranLoker"
+                                            name="ukuranLoker"
+                                        >
+                                            <option value="kecil">Kecil</option>
+                                            <option value="sedang" selected>
+                                                Sedang
+                                            </option>
+                                            <option value="besar">Besar</option>
+                                        </select>
+                                    </p>
+
+                                    <p>
+                                        <label for="jumlahLoker">Jumlah</label>
+                                        <input
+                                            type="number"
+                                            id="jumlahLoker"
+                                            name="jumlahLoker"
+                                            placeholder="Contoh: 1"
+                                            min="1"
+                                            value="1"
+                                        />
+                                    </p>
+
+                                    <p>
+                                        <label for="hargaSewa"
+                                            >Harga / Hari (Rp)
+                                            <span style="color: #ef4444"
+                                                >*</span
+                                            ></label
+                                        >
+                                        <input
+                                            type="number"
+                                            id="hargaSewa"
+                                            name="hargaSewa"
+                                            placeholder="Contoh: 5000"
+                                            min="1000"
+                                            value="5000"
+                                        />
+                                        <span
+                                            class="error-msg"
+                                            id="error-hargaSewa"
+                                        ></span>
+                                    </p>
+
+                                    <p>
+                                        <label for="statusLoker">Status</label>
+                                        <select
+                                            id="statusLoker"
+                                            name="statusLoker"
+                                        >
+                                            <option value="tersedia">
+                                                Tersedia
+                                            </option>
+                                            <option value="disewa">
+                                                Disewa
+                                            </option>
+                                            <option value="maintenance">
+                                                Maintenance
+                                            </option>
+                                        </select>
+                                    </p>
+
+                                    <p>
+                                        <label for="tanggalTersedia"
+                                            >Tanggal Tersedia</label
+                                        >
+                                        <input
+                                            type="date"
+                                            id="tanggalTersedia"
+                                            name="tanggalTersedia"
+                                        />
+                                    </p>
+
+                                    <p>
+                                        <label for="namaPengelola"
+                                            >Nama Pengelola
+                                            <span style="color: #ef4444"
+                                                >*</span
+                                            ></label
+                                        >
+                                        <input
+                                            type="text"
+                                            id="namaPengelola"
+                                            name="namaPengelola"
+                                            placeholder="Nama penanggung jawab"
+                                        />
+                                        <span
+                                            class="error-msg"
+                                            id="error-namaPengelola"
+                                        ></span>
+                                    </p>
+
+                                    <p style="grid-column: 1 / -1">
+                                        <label for="keterangan"
+                                            >Keterangan</label
+                                        >
+                                        <textarea
+                                            id="keterangan"
+                                            name="keterangan"
+                                            rows="2"
+                                            placeholder="Tambahkan catatan mengenai loker..."
+                                        ></textarea>
+                                    </p>
+                                </div>
+                                <div class="form-actions">
+                                    <input
+                                        type="submit"
+                                        id="btn-submit"
+                                        value="Simpan Data Loker"
+                                    />
+                                    <button
+                                        type="button"
+                                        id="btn-reset-form"
+                                        class="btn-secondary"
+                                        style="align-self: auto"
+                                    >
+                                        Batal / Reset
+                                    </button>
+                                </div>
+                            </fieldset>
+                        </form>
+                    </div>
+
+                    <div class="panel-card" id="penyewa">
+                        <div id="panel-penyewa">
+                            <p
+                                style="
+                                    color: var(--gray-400);
+                                    font-size: 13px;
+                                    text-align: center;
+                                    padding: 24px;
+                                "
+                            >
+                                Klik <strong>Muat Data API</strong> untuk
+                                mengambil data penyewa dari server
+                            </p>
+                        </div>
+                    </div>
+                </main>
             </div>
-            <button class="btn-search" type="button">Cari Loker</button>
-            <button class="btn-secondary" type="button">Reset</button>
-          </div>
+
+            <footer class="footer">
+                <div class="footer-grid">
+                    <div class="footer-brand">
+                        <div class="footer-logo">SILOKER</div>
+                        <div class="footer-teal-bar"></div>
+                        <p>
+                            Sistem Informasi Penyewaan Loker Kampus — platform
+                            digital terpadu untuk pengelolaan loker di
+                            Universitas Jember secara efisien dan transparan.
+                        </p>
+                    </div>
+                    <div>
+                        <div class="footer-col-title">Navigasi</div>
+                        <ul class="footer-links">
+                            <li><a href="#dashboard">Dashboard</a></li>
+                            <li><a href="#loker">Data Loker</a></li>
+                            <li>
+                                <a href="#transaksi">Transaksi Penyewaan</a>
+                            </li>
+                            <li><a href="#penyewa">Data Penyewa</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <div class="footer-col-title">Informasi</div>
+                        <div class="footer-info-item">
+                            <span class="footer-info-item-icon"
+                                ><svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="16"
+                                    height="16"
+                                    fill="currentColor"
+                                    class="bi bi-buildings"
+                                    viewBox="0 0 16 16"
+                                >
+                                    <path
+                                        d="M14.763.075A.5.5 0 0 1 15 .5v15a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5V14h-1v1.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V10a.5.5 0 0 1 .342-.474L6 7.64V4.5a.5.5 0 0 1 .276-.447l8-4a.5.5 0 0 1 .487.022M6 8.694 1 10.36V15h5zM7 15h2v-1.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5V15h2V1.309l-7 3.5z"
+                                    />
+                                    <path
+                                        d="M2 11h1v1H2zm2 0h1v1H4zm-2 2h1v1H2zm2 0h1v1H4zm4-4h1v1H8zm2 0h1v1h-1zm-2 2h1v1H8zm2 0h1v1h-1zm2-2h1v1h-1zm0 2h1v1h-1zM8 7h1v1H8zm2 0h1v1h-1zm2 0h1v1h-1zM8 5h1v1H8zm2 0h1v1h-1zm2 0h1v1h-1zm0-2h1v1h-1z"
+                                    /></svg
+                            ></span>
+                            <p>
+                                <strong>Universitas Jember</strong
+                                ><br />Fakultas Ilmu Komputer
+                            </p>
+                        </div>
+                        <div class="footer-info-item">
+                            <span class="footer-info-item-icon"
+                                ><svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="16"
+                                    height="16"
+                                    fill="currentColor"
+                                    class="bi bi-person-heart"
+                                    viewBox="0 0 16 16"
+                                >
+                                    <path
+                                        d="M9 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0m-9 8c0 1 1 1 1 1h10s1 0 1-1-1-4-6-4-6 3-6 4m13.5-8.09c1.387-1.425 4.855 1.07 0 4.277-4.854-3.207-1.387-5.702 0-4.276Z"
+                                    /></svg
+                            ></span>
+                            <p>
+                                <strong>Dibuat oleh</strong><br />Talitha
+                                Puspitasari
+                            </p>
+                        </div>
+                        <div class="footer-info-item">
+                            <span class="footer-info-item-icon"
+                                ><svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="16"
+                                    height="16"
+                                    fill="currentColor"
+                                    class="bi bi-journal-code"
+                                    viewBox="0 0 16 16"
+                                >
+                                    <path
+                                        fill-rule="evenodd"
+                                        d="M8.646 5.646a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1 0 .708l-2 2a.5.5 0 0 1-.708-.708L10.293 8 8.646 6.354a.5.5 0 0 1 0-.708m-1.292 0a.5.5 0 0 0-.708 0l-2 2a.5.5 0 0 0 0 .708l2 2a.5.5 0 0 0 .708-.708L5.707 8l1.647-1.646a.5.5 0 0 0 0-.708"
+                                    />
+                                    <path
+                                        d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2"
+                                    />
+                                    <path
+                                        d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1z"
+                                    /></svg
+                            ></span>
+                            <p>
+                                <strong>Mata Kuliah</strong><br />Pemrograman
+                                Web · 2025/2026
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer-bottom">
+                    <p>
+                        &copy; 2025 <strong>SILOKER</strong> — Sistem Informasi
+                        Penyewaan Loker Kampus
+                    </p>
+                    <p>Universitas Jember · Fakultas Ilmu Komputer</p>
+                </div>
+            </footer>
         </div>
-
-
-        <!-- ============================================================
-             INIII GRID KARTU LOKER
-             Div #loker-grid ini kosong saat halaman pertama dibuka.
-             JavaScript (fungsi renderKartu() di script.js) yang akan
-             mengisi kartu2 loker ke sini menggunakan createElement.
-             Kenapa tidak ditulis langsung di HTML? Supaya kartu bisa
-             dirender ulang setiap kali filter atau pencarian berubah.
-        ============================================================ -->
-        <section id="loker">
-          <div class="section-heading">
-            <h3 class="section-title">Data Loker</h3>
-            <span class="section-subtitle" id="subtitel-loker">Memuat data…</span>
-          </div>
-          <div class="loker-grid" id="loker-grid">
-            <!-- Diisi oleh JavaScript saat halaman selesai dimuat -->
-          </div>
-        </section>
-
-
-        <!-- ============================================================
-             INII TABEL DATA LOKER
-             Sama seperti grid kartu di atas, tbody ini diisi oleh
-             fungsi renderTabel() di script.js, bukan ditulis manual.
-             Footer (#tabel-footer) menampilkan jumlah data yang sedang ditampilkan,
-             diperbarui setiap kali filter aktif.
-        ============================================================ -->
-        <div class="table-card">
-          <div class="table-card-header">
-            <span class="table-card-title">Daftar Lengkap Data Loker</span>
-            <span class="table-total" id="tabel-total">Memuat…</span>
-          </div>
-          <div class="table-container">
-            <table id="tabel-loker">
-              <thead>
-                <tr>
-                  <th>No</th>
-                  <th>Kode Loker</th>
-                  <th>Lokasi</th>
-                  <th>Ukuran</th>
-                  <th>Harga / Hari</th>
-                  <th>Status</th>
-                  <th>Aksi</th>
-                </tr>
-              </thead>
-              <tbody id="tabel-tbody">
-                <!-- Diisi oleh fungsi renderTabel() di script.js -->
-              </tbody>
-              <tfoot>
-                <tr><td colspan="7" id="tabel-footer">Total data ditampilkan: 0 loker</td></tr>
-              </tfoot>
-            </table>
-          </div>
-        </div>
-
-        <hr />
-
-        <!-- ============================================================
-             INIII FORM TAMBAH / EDIT LOKER
-             Form ini punya dua mode:
-             - Mode tambah: judul "Tambah Data Loker", tombol "Simpan Data Loker"
-             - Mode edit: judul dan teks tombol diubah JavaScript saat
-               user menekan tombol Edit di tabel/kartu
-             Atribut novalidate mematikan validasi bawaan browser
-             supaya kita bisa menampilkan pesan error dengan gaya sendiri.
-        ============================================================ -->
-        <div class="form-card" id="form-section">
-          <div class="section-heading" style="margin-bottom:16px">
-            <!-- Teks judul ini bisa berubah jadi "Edit Data Loker" saat mode edit aktif -->
-            <h3 class="section-title" id="form-title">Tambah Data Loker</h3>
-          </div>
-
-          <form id="form-loker" novalidate>
-            <fieldset>
-              <legend>Data Loker Baru</legend>
-              <div class="form-grid">
-
-                <p>
-                  <label for="kodeLoker">Kode Loker <span style="color:#EF4444">*</span></label>
-                  <input type="text" id="kodeLoker" name="kodeLoker"
-                    placeholder="Contoh: LKR-A101" />
-                  <!-- Pesan error diisi JavaScript saat validasi gagal -->
-                  <span class="error-msg" id="error-kodeLoker"></span>
-                </p>
-
-                <p>
-                  <label for="lokasiLoker">Lokasi / Gedung <span style="color:#EF4444">*</span></label>
-                  <input type="text" id="lokasiLoker" name="lokasiLoker"
-                    placeholder="Contoh: Gedung A / Lantai 2" />
-                  <span class="error-msg" id="error-lokasiLoker"></span>
-                </p>
-
-                <p>
-                  <label for="ukuranLoker">Ukuran Loker</label>
-                  <select id="ukuranLoker" name="ukuranLoker">
-                    <option value="kecil">Kecil</option>
-                    <option value="sedang" selected>Sedang</option>
-                    <option value="besar">Besar</option>
-                  </select>
-                </p>
-
-                <p>
-                  <label for="jumlahLoker">Jumlah</label>
-                  <input type="number" id="jumlahLoker" name="jumlahLoker"
-                    placeholder="Contoh: 1" min="1" value="1" />
-                </p>
-
-                <p>
-                  <label for="hargaSewa">Harga / Hari (Rp) <span style="color:#EF4444">*</span></label>
-                  <input type="number" id="hargaSewa" name="hargaSewa"
-                    placeholder="Contoh: 5000" min="1000" value="5000" />
-                  <span class="error-msg" id="error-hargaSewa"></span>
-                </p>
-
-                <p>
-                  <label for="statusLoker">Status</label>
-                  <select id="statusLoker" name="statusLoker">
-                    <option value="tersedia">Tersedia</option>
-                    <option value="disewa">Disewa</option>
-                    <option value="maintenance">Maintenance</option>
-                  </select>
-                </p>
-
-                <p>
-                  <label for="tanggalTersedia">Tanggal Tersedia</label>
-                  <input type="date" id="tanggalTersedia" name="tanggalTersedia" />
-                </p>
-
-                <p>
-                  <label for="namaPengelola">Nama Pengelola <span style="color:#EF4444">*</span></label>
-                  <input type="text" id="namaPengelola" name="namaPengelola"
-                    placeholder="Nama penanggung jawab" />
-                  <span class="error-msg" id="error-namaPengelola"></span>
-                </p>
-
-                <p style="grid-column: 1 / -1;">
-                  <label for="keterangan">Keterangan</label>
-                  <textarea id="keterangan" name="keterangan" rows="2"
-                    placeholder="Tambahkan catatan mengenai loker..."></textarea>
-                </p>
-
-              </div>
-              <div class="form-actions">
-                <!-- Teks tombol ini juga berubah saat mode edit aktif ("Simpan Perubahan") -->
-                <input type="submit" id="btn-submit" value="Simpan Data Loker" />
-                <button type="button" id="btn-reset-form" class="btn-secondary"
-                  style="align-self:auto">Batal / Reset</button>
-              </div>
-            </fieldset>
-          </form>
-        </div>
-
-
-        <!-- ============================================================
-             iniii PANEL DATA PENYEWA — FETCH API
-             Data di sini tidak langsung ada saat halaman dibuka.
-             User harus klik tombol "Muat Data API" dulu, baru JavaScript
-             memanggil fetch() ke server dan ngisi #panel-penyewa
-             dengan kartu penyewa. Loading overlay muncul selama proses ini.
-        ============================================================ -->
-        <div class="panel-card" id="penyewa">
-          <div class="section-heading" style="margin-bottom:16px">
-            <h3 class="section-title">Data Penyewa</h3>
-            <button class="btn-muat-api" id="btn-muat-api" type="button">📡 Muat Data API</button>
-          </div>
-          <!-- Konten awal hanya teks panduan. JavaScript ganti dengan kartu penyewa -->
-          <div id="panel-penyewa">
-            <p style="color:var(--gray-400);font-size:13px;text-align:center;padding:24px">
-              Klik <strong>Muat Data API</strong> untuk mengambil data penyewa dari server
-            </p>
-          </div>
-        </div>
-
-      </main>
-    </div>
-
-
-    <!-- ============================================================
-         INIII FOOTER RESPONSIF 3 KOLOM
-         Footer ini pakai CSS Grid (3 kolom di desktop, 1 kolom di mobile).
-         Gada JavaScript di sini, murni HTML + CSS 
-    ============================================================ -->
-    <footer class="footer">
-      <div class="footer-grid">
-        <div class="footer-brand">
-          <div class="footer-logo">SILOKER</div>
-          <div class="footer-teal-bar"></div>
-          <p>Sistem Informasi Penyewaan Loker Kampus — platform digital terpadu untuk pengelolaan loker di Universitas Jember secara efisien dan transparan.</p>
-        </div>
-        <div>
-          <div class="footer-col-title">Navigasi</div>
-          <ul class="footer-links">
-            <li><a href="#dashboard">Dashboard</a></li>
-            <li><a href="#loker">Data Loker</a></li>
-            <li><a href="#transaksi">Transaksi Penyewaan</a></li>
-            <li><a href="#penyewa">Data Penyewa</a></li>
-          </ul>
-        </div>
-        <div>
-          <div class="footer-col-title">Informasi</div>
-          <div class="footer-info-item">
-            <span class="footer-info-item-icon">🏛️</span>
-            <p><strong>Universitas Jember</strong><br>Fakultas Ilmu Komputer</p>
-          </div>
-          <div class="footer-info-item">
-            <span class="footer-info-item-icon">👩‍💻</span>
-            <p><strong>Dibuat oleh</strong><br>Talitha Puspitasari</p>
-          </div>
-          <div class="footer-info-item">
-            <span class="footer-info-item-icon">📚</span>
-            <p><strong>Mata Kuliah</strong><br>Pemrograman Web · 2025/2026</p>
-          </div>
-        </div>
-      </div>
-      <div class="footer-bottom">
-        <p>&copy; 2025 <strong>SILOKER</strong> — Sistem Informasi Penyewaan Loker Kampus</p>
-        <p>Universitas Jember · Fakultas Ilmu Komputer</p>
-      </div>
-    </footer>
-
-  </div>
-
-  <!--
-    Script diletakkan di sini (sebelum </body>) supaya saat JS
-    dijalankan, semua elemen HTML di atas sudah ada di DOM.
-  -->
-  <script src="script.js"></script>
-</body>
+        <script src="script.js"></script>
+    </body>
 </html>
