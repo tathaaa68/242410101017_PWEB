@@ -9,14 +9,102 @@
         />
         <title>SILOKER – Sistem Informasi Loker Kampus</title>
 
+<<<<<<< HEAD
         <link rel="icon" href="ikon logo.png" />
         <link rel="stylesheet" href="style.css" />
     </head>
     <body>
         <div class="loading-overlay" id="loading-overlay">
             <div class="loading-spinner"></div>
+=======
+  <link rel="icon" href="ikon logo.png">
+  <link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+
+  <!-- ============================================================
+       LOADING OVERLAY
+       Menutupi seluruh layar saat Fetch API sedang berjalan.
+       Ditampilkan/disembunyikan oleh JavaScript di script.js.
+  ============================================================ -->
+  <div class="loading-overlay" id="loading-overlay">
+    <div class="loading-spinner"></div>
+  </div>
+
+  <!-- ============================================================
+       ini MODAL DETAIL LOKER
+       Konten di dalam #modalisi diisi sepenuhnya oleh JavaScript
+       saat user menekan tombol "Detail" di kartu atau tabel.
+       Tombol tutup (#modal-tutup) juga dihubungkan event listenernya di script.js.
+  ============================================================ -->
+  <div class="modal-overlay" id="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-header">
+        <span style="font-family:'Syne',sans-serif;font-weight:700;color:var(--blue-dark)">Detail Loker</span>
+        <button class="modal-tutup" id="modal-tutup" type="button" title="Tutup">✕</button>
+      </div>
+      <div id="modal-isi">
+      </div>
+    </div>
+  </div>
+
+  <div class="notif-box" id="notif-box"></div>
+
+
+  <!-- ============================================================
+      INI NAVBAR FIXED RESPONSIF
+       Navbar ini "nempel" di atas layar (position: fixed di CSS)
+       supaya user bisa navigasi kapan saja tanpa harus scroll ke atas.
+       Di layar kecil (mobile), menu disembunyikan dan diganti dengan
+       tombol hamburger (#navToggle) yang memunculkan #mobileMenu
+  ============================================================ -->
+  <nav class="navbar">
+    <div class="navbar-logo">
+      <img src="ikon logo.png" alt="logo" class="logo-img">
+      <span class="logo-text">SILOKER</span>
+    </div>
+    <ul class="navbar-menu">
+      <li><a href="#dashboard" class="active">Dashboard</a></li>
+      <li><a href="#loker">Data Loker</a></li>
+      <li><a href="#transaksi">Transaksi</a></li>
+      <li><a href="#penyewa">Penyewa</a></li>
+    </ul>
+    <button class="navbar-toggle" id="navToggle" type="button" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <div class="navbar-mobile-menu" id="mobileMenu">
+    <a href="#dashboard">Dashboard</a>
+    <a href="#loker">Data Loker</a>
+    <a href="#transaksi">Transaksi Penyewaan</a>
+    <a href="#penyewa">Data Penyewa</a>
+  </div>
+
+  <div class="page-body">
+
+    <!-- ============================================================
+         INI HERO SECTION
+         Bagian pembuka halaman dengan statistik ringkas.
+         Angka di dalam .herostatnum (id="stat-*") awalnya 0,
+         lalu diperbarui oleh JavaScript setelah data loker dimuat
+         jadi user selalu lihat angka yang akurat, bukan angka statis
+    ============================================================ -->
+    <section class="hero" id="dashboard">
+      <div class="hero-badge">Universitas Jember · Fakultas Ilmu Komputer</div>
+      <h1>SILOKER</h1>
+      <h2>Sistem Informasi Penyewaan Loker Kampus</h2>
+      <p>Platform digital terpadu untuk pengelolaan loker kampus, pemantauan ketersediaan,
+         pencatatan transaksi, dan manajemen penyewa secara real time.</p>
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <span class="hero-stat-num" id="stat-total">0</span>
+          <span class="hero-stat-label">Total Loker</span>
+>>>>>>> a9e2f4062b06367c00f338ccdafdd190323309b0
         </div>
 
+<<<<<<< HEAD
         <div class="modal-overlay" id="modal-overlay">
             <div class="modal-box">
                 <div class="modal-header">
@@ -38,6 +126,89 @@
                     </button>
                 </div>
                 <div id="modal-isi"></div>
+=======
+
+    <div class="content-area">
+
+      <!-- ============================================================
+           INIII SIDEBAR FILTER
+           Sidebar ini berisi checkbox untuk memfilter data loker
+           berdasarkan status, ukuran, gedung, dan harga.
+           Setiap checkbox dengan class .filter status punya value yang
+           dibaca oleh fungsi filterDariSidebar() di script.js.
+           Angka di .filter-count (misalnya "47") idealnya diisi
+           JavaScript dari data yang sama dengan hero stats ini masih hardcode, jadi perlu diupdate manual jika data berubah.
+      ============================================================ -->
+      <aside class="sidebar">
+        <!-- Tombol ini toggle sidebar di mobile, class aktif diatur JavaScript -->
+        <button class="sidebar-toggle-btn" id="sidebarToggle" type="button">
+          <span>🔽 Filter &amp; Navigasi</span>
+          <span class="sidebar-toggle-icon">▾</span>
+        </button>
+
+        <div class="sidebar-content" id="sidebarContent">
+
+          <div class="sidebar-section">
+            <div class="sidebar-section-title">Status Loker</div>
+            <label class="filter-item" for="filter-tersedia">
+              <input type="checkbox" id="filter-tersedia" class="filter-status" value="tersedia" checked>
+              <span class="filter-label">Tersedia</span>
+              <span class="filter-count" data-stat="tersedia">47</span>
+            </label>
+            <label class="filter-item" for="filter-disewa">
+              <input type="checkbox" id="filter-disewa" class="filter-status" value="disewa" checked>
+              <span class="filter-label">Disewa</span>
+              <span class="filter-count" data-stat="disewa">68</span>
+            </label>
+            <label class="filter-item" for="filter-maintenance">
+              <input type="checkbox" id="filter-maintenance" class="filter-status" value="maintenance" checked>
+              <span class="filter-label">Maintenance</span>
+              <span class="filter-count" data-stat="maintenance">5</span>
+            </label>
+          </div>
+
+          <div class="sidebar-section">
+            <div class="sidebar-section-title">Ukuran Loker</div>
+            <label class="filter-item"><input type="checkbox" checked><span class="filter-label">Kecil</span><span class="filter-count">40</span></label>
+            <label class="filter-item"><input type="checkbox" checked><span class="filter-label">Sedang</span><span class="filter-count">50</span></label>
+            <label class="filter-item"><input type="checkbox" checked><span class="filter-label">Besar</span><span class="filter-count">30</span></label>
+          </div>
+
+          <div class="sidebar-section">
+            <div class="sidebar-section-title">Gedung</div>
+            <label class="filter-item"><input type="checkbox" checked><span class="filter-label">Gedung A</span><span class="filter-count">24</span></label>
+            <label class="filter-item"><input type="checkbox" checked><span class="filter-label">Gedung B</span><span class="filter-count">20</span></label>
+            <label class="filter-item"><input type="checkbox"><span class="filter-label">Gedung C</span><span class="filter-count">18</span></label>
+            <label class="filter-item"><input type="checkbox"><span class="filter-label">Gedung D &amp; E</span><span class="filter-count">36</span></label>
+          </div>
+
+          <div class="sidebar-section">
+            <div class="sidebar-section-title">Harga / Hari</div>
+            <label class="filter-item"><input type="checkbox" checked><span class="filter-label">Rp 3.000</span><span class="filter-count">40</span></label>
+            <label class="filter-item"><input type="checkbox" checked><span class="filter-label">Rp 5.000</span><span class="filter-count">50</span></label>
+            <label class="filter-item"><input type="checkbox" checked><span class="filter-label">Rp 8.000</span><span class="filter-count">30</span></label>
+          </div>
+
+          <button class="btn-filter-reset" type="button">↺ Reset Filter</button>
+        </div>
+      </aside>
+
+
+      <main>
+
+        <!-- ============================================================
+             INIII FORM PENCARIAN DATA
+             Pencarian berjalan saat tombol "Cari Loker" diklik.
+             JavaScript membaca nilai dari ketiga field ini lalu
+             memfilter array data loker dan ngerender ulang kartu + tabel.
+        ============================================================ -->
+        <div class="search-bar-wrapper">
+          <h4>🔍 Cari &amp; Filter Data Loker</h4>
+          <div class="search-row">
+            <div class="search-field">
+              <label for="searchKode">Kode / Pengelola</label>
+              <input type="text" id="searchKode" placeholder="Contoh: LKR-A101 atau Budi" />
+>>>>>>> a9e2f4062b06367c00f338ccdafdd190323309b0
             </div>
         </div>
         <div class="notif-box" id="notif-box"></div>
