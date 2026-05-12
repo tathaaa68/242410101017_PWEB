@@ -1,35 +1,23 @@
 <?php
 
-namespace App\Models;
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
-use Illuminate\Database\Eloquent\Model;
-
-class Gedung extends Model
+return new class extends Migration
 {
-    // Kolom yang boleh diisi secara massal
-    protected $fillable = [
-        'nama_gedung',
-        'kode_gedung',
-        'jumlah_lantai',
-        'deskripsi_lokasi',
-        'is_aktif', // Menambahkan kolom status aktif gedung
-    ];
-
-    // Mengonversi tipe data saat keluar/masuk database
-    protected $casts = [
-        'jumlah_lantai' => 'integer',
-        'is_aktif' => 'boolean',
-    ];
-
-    // Local Scope untuk memfilter gedung yang sedang aktif/beroperasi
-    public function scopeScopeAktif($query)
+    public function up(): void
     {
-        return $query->where('is_aktif', true);
+        Schema::create('gedung', function (Blueprint $table) {
+            $table->id();
+            $table->string('nama_gedung');
+            // tambahkan kolom lainnya di sini
+            $table->timestamps();
+        });
     }
 
-    // Relasi ke Loker
-    public function lokers()
+    public function down(): void
     {
-        return $this->hasMany(Loker::class);
+        Schema::dropIfExists('gedung');
     }
-}
+};

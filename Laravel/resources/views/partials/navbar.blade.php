@@ -10,6 +10,7 @@
             <li><a href="/dashboard#loker">Daftar Loker</a></li>
             <li><a href="/dashboard#transaksi">Transaksi</a></li>
             <li><a href="/dashboard#penyewa">Penyewa</a></li>
+            <li><a href="{{ route('manajemen-mahasiswa.index') }}"class="{{ request()->is('manajemen-mahasiswa*') ? 'active' : '' }}">Manajemen Mahasiswa</a></li>
             <li><a href="{{ route('kontak') }}" class="{{ request()->routeIs('kontak') ? 'active' : '' }}">Kontak</a></li>
         </ul>
         <button class="navbar-toggle" id="navToggle" type="button" aria-label="Toggle menu">
