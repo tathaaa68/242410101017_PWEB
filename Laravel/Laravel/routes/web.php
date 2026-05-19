@@ -7,8 +7,12 @@ use App\Http\Controllers\TentangController;
 use App\Http\Controllers\LokerController;
 use App\Http\Controllers\KontakController;
 use App\http\controllers\ManajemenMahasiswaController;
+use App\Http\Controllers\PenyewaController;
+use App\Http\Controllers\PreferensiController;
 
-Route::get('/', function () {return redirect()->route("dashboard");});
+Route::get('/', function () {
+    return redirect()->route("dashboard");
+});
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 Route::get('/tentang', [TentangController::class, 'index'])->name('tentang');
 Route::post('/manajemen-mahasiswa', [ManajemenMahasiswaController::class, 'store'])->name('manajemen-mahasiswa.store');
@@ -19,14 +23,23 @@ Route::put('/manajemen-mahasiswa/{id}', [ManajemenMahasiswaController::class, 'u
 Route::delete('/manajemen-mahasiswa/{id}', [ManajemenMahasiswaController::class, 'destroy'])->name('manajemen-mahasiswa.destroy');
 Route::get('/kontak', [KontakController::class, 'index'])->name('kontak');
 Route::get('/hitung/{a}/{b}', fn($a, $b) => $a + $b);
+// Route untuk mengambil data detail loker berdasarkan ID
+Route::get('/loker/{id}', [LokerController::class, 'showJson'])->name('loker.json');
 
+Route::get('/penyewa', [PenyewaController::class, 'index'])->name('penyewa');
+Route::get('/preferensi', [PreferensiController::class, 'index']);
+Route::post('/preferensi', [PreferensiController::class, 'save']);
 
 Route::middleware(['auth'])->group(function () {
     // rute lainnya...
 });
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::post('/dashboard/reset-visit', [DashboardController::class, 'resetKunjungan'])->name('reset.visit');
+
+// Route::get('/dashboard', function () {
+//     return view('dashboard');
+// })->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware(['auth', 'role'])->group(function () {
     Route::get('/manajemen-mahasiswa', [ManajemenMahasiswaController::class, 'index'])->name('manajemen-mahasiswa.index');
@@ -35,10 +48,11 @@ Route::middleware(['auth', 'role'])->group(function () {
         return 'Selamat datang, Admin!';
     })->name('admin.dashboard');
 });
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

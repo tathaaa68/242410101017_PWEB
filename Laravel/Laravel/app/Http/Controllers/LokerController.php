@@ -18,5 +18,15 @@ class LokerController extends Controller
         'disewa'      => $data_loker->where('status', 'disewa')->count(),
         'maintenance' => $data_loker->where('status', 'maintenance')->count(),
     ]);
+
+    
+}
+public function showJson($id)
+{
+    // Cari loker, jika tidak ketemu langsung return error 404
+    $loker = Loker::findOrFail($id);
+    
+    // Kembalikan data dalam bentuk JSON
+    return response()->json($loker);
 }
 }

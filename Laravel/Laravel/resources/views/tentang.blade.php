@@ -7,27 +7,27 @@
     <div class="hero-badge">Visi & Misi SILOKER</div>
     <h1>Tentang Kami</h1>
     <h2>Mendigitalkan Fasilitas Kampus</h2>
-    <p>SILOKER adalah inisiatif digital dari Fakultas Ilmu Komputer Universitas Jember untuk mempermudah 
+    <p>SILOKER adalah inisiatif digital dari Fakultas Ilmu Komputer Universitas Jember untuk mempermudah
        mahasiswa dalam mengakses fasilitas penyimpanan yang aman dan terorganisir.</p>
-    
+
     <div class="hero-stats" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 30px;">
-        <x-stat-card 
-            judul="Tahun Berdiri" 
-            :nilai="2024" 
-            ikon="bi-calendar-event" 
-            warna="#ffffff" 
+        <x-stat-card
+            judul="Tahun Berdiri"
+            :nilai="2024"
+            ikon="bi-calendar-event"
+            warna="#ffffff"
         />
-        <x-stat-card 
-            judul="Gedung Terintegrasi" 
-            :nilai="5" 
-            ikon="bi-building" 
-            warna="#ffc107" 
+        <x-stat-card
+            judul="Gedung Terintegrasi"
+            :nilai="5"
+            ikon="bi-building"
+            warna="#ffc107"
         />
-        <x-stat-card 
-            judul="Kepuasan Pengguna" 
-            :nilai="98" 
-            ikon="bi-star-fill" 
-            warna="#28a745" 
+        <x-stat-card
+            judul="Kepuasan Pengguna"
+            :nilai="98"
+            ikon="bi-star-fill"
+            warna="#28a745"
         />
     </div>
 </section>
@@ -53,10 +53,10 @@
     <main>
         <!-- Latar Belakang Section -->
         <div class="table-card" id="latar-belakang" style="margin-bottom: 30px;">
-            <div class="table-card-header">
+            <div class="table-card-header text-black dark:text-white">
                 <span class="table-card-title">Latar Belakang</span>
             </div>
-            <div style="padding: 25px; line-height: 1.8; color: #444;">
+            <div style="padding: 25px; line-height: 1.8;" class="dark:text-white">
                 <p>Sistem Informasi Loker Kampus (SILOKER) lahir dari kebutuhan akan transparansi dan efisiensi dalam pengelolaan aset kampus. Sebelumnya, proses peminjaman loker dilakukan secara manual yang sering kali menyebabkan ketidakpastian status ketersediaan.</p>
                 <p>Dengan SILOKER, setiap civitas akademika dapat memantau, memesan, dan mengelola penyewaan loker hanya dalam beberapa klik, memastikan barang bawaan aman selama kegiatan perkuliahan berlangsung.</p>
             </div>
