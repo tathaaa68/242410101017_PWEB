@@ -29,6 +29,8 @@ Route::get('/loker/{id}', [LokerController::class, 'showJson'])->name('loker.jso
 Route::get('/penyewa', [PenyewaController::class, 'index'])->name('penyewa');
 Route::get('/preferensi', [PreferensiController::class, 'index']);
 Route::post('/preferensi', [PreferensiController::class, 'save']);
+Route::get('/pinjam-loker/{id}', [PenyewaController::class, 'pinjamLoker'])->name('pinjam.loker');
+Route::post('/pinjam-loker', [PenyewaController::class, 'store'])->name('pinjam.loker.store');
 
 Route::middleware(['auth'])->group(function () {
     // rute lainnya...

@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Penyewa;
+use App\Models\Loker;
+use App\Models\Peminjaman;
 use Illuminate\Http\Request;
 
 class PenyewaController extends Controller
@@ -53,5 +54,46 @@ class PenyewaController extends Controller
 
         // JIKA BUKAN AJAX (LOAD HALAMAN PERTAMA KALI)
         return view('penyewa', compact('penyewa'));
+    }
+
+    public function pinjamLoker($id)
+    {
+        $loker = Loker::findOrFail($id);
+        $mahasiswa = auth()->user();
+        return view('pinjam', compact('loker', 'mahasiswa'));
+    }
+    public function store(Request $request)
+    {
+        $request->validate([
+            'loker_id' => 'required|exists:lokers,id',
+            'mahasiswa_id' => 'required|exists:mahasiswa,id',
+            'tgl_kembali' => 'required|date|after:today',
+        ]);
+
+        $loker = Loker::find($request->loker_id);
+
+        // Hitung total biaya sewa berdasarkan selisih hari
+        $tglPinjam = new \DateTime();
+        $tglKembali = new \DateTime($request->tgl_kembali);
+        $selisih = $tglPinjam->diff($tglKembali);
+        $hari = $selisih->days <= 0 ? 1 : $selisih->days;
+        $totalBiaya = $hari * $loker->harga;
+
+        // 1. Simpan transaksi ke tabel peminjamans
+        Peminjaman::create([
+            'user_id' => $request->mahasiswa_id,
+            'loker_id' => $request->loker_id,
+            'tgl_pinjam' => now(),
+            'tgl_kembali' => $request->tgl_kembali,
+            'total_biaya' => $totalBiaya,
+            'status_peminjaman' => 'aktif'
+        ]);
+
+        // 2. Update status loker menjadi 'disewa'
+        $loker->update([
+            'status' => 'disewa'
+        ]);
+
+        return redirect('/dashboard')->with('success', 'Peminjaman loker berhasil diproses!');
     }
 }

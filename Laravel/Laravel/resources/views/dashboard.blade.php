@@ -28,6 +28,7 @@
             </div>
 
             <div id="modal-isi" class="dark:text-gray-200"></div>
+            
         </div>
     </div>
 
@@ -649,6 +650,14 @@
                                     <td class="dark:!text-gray-400" style="padding: 10px; font-weight: 600; color: #64748b; vertical-align: top;">Keterangan</td>
                                     <td class="dark:!text-gray-400" style="padding: 10px; color: #64748b; font-style: italic;">${data.keterangan ? data.keterangan : 'Tidak ada catatan tambahan.'}</td>
                                 </tr>
+                                // tmbh button pinjam jika status tersedia
+                                ${data.status === 'tersedia' ? `<tr>
+                                    <td colspan="2" style="padding: 10px; text-align: center;">
+                                        <a href="{{ route('pinjam.loker', ['id' => $data->id]) }}" id="btn-pinjam" style="background-color: #2563eb; color: #fff; padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer; font-weight: 600;">
+                                            Pinjam Loker Ini
+                                        </a>
+                                    </td>
+                                </tr>` : ''}
                             </table>
                         </div>
                     `;
